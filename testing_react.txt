@@ -1,0 +1,37 @@
+how to test react and android installation
+-------------------------------------------------------------
+ANDROID:
+    react-native init projectname
+    (start emulator)
+    cd projectname
+    react-native start > /dev/null 2>&1 &
+    adb reverse tcp:8081 tcp:8081
+    (wait a second, depends on how fast your computer is)
+    react-native run-android
+
+NOTE: requires emulator running or android device connected
+      to start emulator from command line:
+           > android avd
+      device settings: check the box to wipe user data on start,
+           otherwise "launcher 3" might fail. also make sure 
+           to initialize with at least these memory settings
+                1024 RAM
+                32 heap
+                200 internal storage
+            
+            what works best for me:
+                nexus 7 (7.02", 1200x1920: xhdpi)
+                android 6.0 -api level 23
+                intel atom x86_64
+                no skin
+                1024 ram
+                32 vm heap
+                200 mib internal storage
+
+-------------------------------------------------------------
+IOS:
+open projectname in xcode
+click run
+
+NOTE: untested, ios emulation requires xcode installation
+

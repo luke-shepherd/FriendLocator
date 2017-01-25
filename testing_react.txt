@@ -33,5 +33,6 @@ IOS:
 open projectname in xcode
 click run
 
-NOTE: untested, ios emulation requires xcode installation
+NOTE: untested
+      ios emulation requires xcode installation
 

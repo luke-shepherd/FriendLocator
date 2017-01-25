@@ -1,7 +1,6 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ * Login Page for cs183 project
+ * https://github.com/luke-shepherd/AdultFriendLocator
  */
 
 import React, { Component } from 'react';
@@ -9,45 +8,109 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
+  TextInput,
   View
 } from 'react-native';
 
-export default class friendLocator extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
-  }
+export default class AllThingsLogin extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+        };
+    }
+
+    updateUsername = (text) => {
+        this.setState((state) => {
+            return {
+                username: text,
+                password: this.state.password,
+            }
+        });
+    };
+
+    updatePassword = (text) => {
+        this.setState((state) => {
+            return {
+                username: this.state.username,
+                password: text,
+            }
+        });
+    };
+
+    checkText = (text) => {
+        /*only allow certain characters, word ban list, etc*/
+        console.log('checking: ' + text)
+    };
+
+    loginUser = (text) => {
+        /*send username, password to server*/
+        console.log('logging in: ' + text)
+    };
+
+    render() {
+        return (
+            <View style={styles.logincontainer}>
+                <Text style={styles.logintxt}>
+                    Adults with Friends
+                </Text>
+                <TextInput 
+                    style={styles.loginbox}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    placeholder='Enter Username!'
+                    onChange={(event) => this.updateUsername(
+                        event.nativeEvent.text
+                    )}
+
+                    onEndEditing={(event) => this.checkText(
+                        event.nativeEvent.text
+                    )}
+                />
+                <TextInput 
+                    style={styles.loginbox}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    placeholder='Enter Password!'
+                    onChange={(event) => this.updatePassword(
+                        event.nativeEvent.text
+                    )}
+
+                    onEndEditing={(event) => this.checkText(
+                        event.nativeEvent.text
+                    )}
+
+                    onSubmitEditing={(event) => this.loginUser(
+                        event.nativeEvent.text
+                    )}
+                />
+                <Text style={styles.logintxt}>
+                    user: {this.state.username}{'\n'}
+                    pass: {this.state.password}
+                </Text>
+            </View>
+        );
+    }
+
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  logincontainer: {
+    flex: 1, //allows flex usage for justification
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    //alignItems: 'center',
+    backgroundColor: 'steelblue',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  loginbox: {
+    height: 100,
   },
-  instructions: {
+  logintxt: {
+    fontSize: 50,
     textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+    color: 'skyblue',
   },
 });
 
-AppRegistry.registerComponent('friendLocator', () => friendLocator);
+AppRegistry.registerComponent('friendLocator', () => AllThingsLogin);
+

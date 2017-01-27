@@ -2,7 +2,7 @@ how to test react and android installation
 -------------------------------------------------------------
 ANDROID:
     react-native init projectname
-    (start emulator)
+    (start emulator) android avd &
     cd projectname
     react-native start > /dev/null 2>&1 &
     adb reverse tcp:8081 tcp:8081

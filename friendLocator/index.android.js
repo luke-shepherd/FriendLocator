@@ -47,6 +47,36 @@ export default class AllThingsLogin extends Component {
     loginUser = (text) => {
         /*send username, password to server*/
         console.log('logging in: ' + text)
+
+        console.log('type: ')
+        console.log(typeof this.state.username)
+
+        var url = 'http://107.170.249.224:3000/test';
+        /*var url = 'http://www.reddit.com/';*/
+
+        var obj = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'user': 'adult',
+                'pass': 'friends',
+            })
+        };
+
+        let response = fetch(url, obj)
+        .then((response) => response)
+        .then((responseJson) => {
+            console.log('response: ')
+            console.log(responseJson);
+        })
+        .catch((error) => {
+            console.log('error: ')
+            console.log(error);
+        });
+
     };
 
     render() {

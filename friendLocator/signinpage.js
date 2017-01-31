@@ -30,10 +30,14 @@ export default class SignInPage extends Component {
     }
 
     /* called when component is mounted (just before rendered)
-        debug function currently routes to testpage after 3 seconds */
+        debug function currently routes to testpage after 3 seconds 
+        then back to itself */
     componentWillMount() {
         setTimeout(() => {
             this.routeTo('TestPage')
+            setTimeout(() => {
+                this.routeTo('SignInPage')
+            }, 3000);
         }, 3000);
     }
     

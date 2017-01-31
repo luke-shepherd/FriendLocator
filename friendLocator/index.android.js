@@ -1,24 +1,37 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
 import React, { Component } from 'react';
+
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
+    AppRegistry,
+    Navigator,
+    StyleSheet,
+    Text,
+    View
 } from 'react-native';
+
 import TestPage from './testpage.js';
+import SignInPage from './signinpage.js';
 
 export default class Main extends Component {
-  render() {
-    return (
-        <TestPage />
-    );
+    renderScene(route, navigator) {
+        switch(route.id) {
+            case 'SignInPage':
+                return (<SignInPage nav={navigator} />);
+            case 'TestPage':
+                return (<TestPage nav={navigator} />);
+        }
+    }
+
+    render() {
+        return (
+            <Navigator
+                initialRoute={{ id: 'SignInPage' }}
+                renderScene={this.renderScene.bind(this)}
+            />
+        );
   }
 }
 
+
 AppRegistry.registerComponent('friendLocator', () => Main);
+

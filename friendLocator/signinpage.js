@@ -25,14 +25,15 @@ export default class SignInPage extends Component {
         });
     }
 
-    /* called on initialization 
-        debug function routes to testpage after 3 seconds 
-     */
+    routeTo(sceneId) {
+        this.props.nav.replace({id: sceneId});
+    }
+
+    /* called when component is mounted (just before rendered)
+        debug function currently routes to testpage after 3 seconds */
     componentWillMount() {
         setTimeout(() => {
-            this.props.nav.replace({
-                id: 'TestPage',
-            });
+            this.routeTo('TestPage')
         }, 3000);
     }
     
@@ -40,7 +41,7 @@ export default class SignInPage extends Component {
         return (
             <View style={this.style.container}>
                 <Text style={this.style.text}>
-                    Testing routing from the login page.
+                    Testing routing from the login page...
                 </Text>
             </View>
         );

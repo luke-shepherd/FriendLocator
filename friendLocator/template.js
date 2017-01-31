@@ -7,7 +7,7 @@ import {
     Navigator
 } from 'react-native';
 
-export default class TestPage extends Component {
+export default class Template extends Component {
     constructor(props) {
         super(props);
         this.style = StyleSheet.create({
@@ -33,7 +33,7 @@ export default class TestPage extends Component {
         return (
             <View style={this.style.container}>
                 <Text style={this.style.text}>
-                    it works.
+                    Template Page
                 </Text>
             </View>
         );

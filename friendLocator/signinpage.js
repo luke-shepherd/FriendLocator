@@ -4,12 +4,23 @@ import {
     StyleSheet,
     Text,
     View,
-    Navigator
+    Navigator,
+    TextInput,
+    Button,
+    Switch
 } from 'react-native';
 
 export default class SignInPage extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            username: '',
+            password: '',
+            toggle: false,
+            buttonTitle: 'Sign Up'
+        }
+
         this.style = StyleSheet.create({
             container: {
                 flex: 1,
@@ -18,9 +29,16 @@ export default class SignInPage extends Component {
                 backgroundColor: '#F5FCFF',
             },
             text: {
-                fontSize: 20,
+                fontSize: 35,
                 textAlign: 'center',
-                margin: 10,
+            },
+            inputbox: {
+                height: 60,
+                width: 300,
+                fontSize: 20,
+            },
+            toggle: {
+                marginBottom: 10,
             },
         });
     }
@@ -29,24 +47,47 @@ export default class SignInPage extends Component {
         this.props.nav.replace({id: sceneId});
     }
 
-    /* called when component is mounted (just before rendered)
-        debug function currently routes to testpage after 3 seconds 
-        then back to itself */
-    componentWillMount() {
-        setTimeout(() => {
-            this.routeTo('TestPage')
-            setTimeout(() => {
-                this.routeTo('SignInPage')
-            }, 3000);
-        }, 3000);
+    buttonAction = () => {
+        this.routeTo('MapPage')
     }
-    
+
     render() {
         return (
             <View style={this.style.container}>
                 <Text style={this.style.text}>
-                    Testing routing from the login page...
+                    Login or Sign Up!
                 </Text>
+
+                <TextInput
+                    style={this.style.inputbox}
+                    placeholder='Enter Username'
+                    onChangeText={(username) => this.setState({username})}
+                />
+
+                <TextInput
+                    style={this.style.inputbox}
+                    placeholder='Enter Password'
+                    onChangeText={(password) => this.setState({password})}
+                />
+
+                <Switch
+                    value={this.state.toggle}
+                    style={this.style.toggle}
+                    onValueChange={(value) => this.setState({toggle:value})}
+                />
+
+                <Button
+                    onPress={this.buttonAction}
+                    title={this.state.toggle ? 'Log In' : 'Sign Up'}
+                    color='#841584'
+                />
+
+                <Text style={this.style.text}>
+                    User: {this.state.username}{'\n'}
+                    Pass: {this.state.password}{'\n'}
+                    toggle: {this.state.toggle ? 'True' : 'False'}
+                </Text>
+
             </View>
         );
     }

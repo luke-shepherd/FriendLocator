@@ -9,9 +9,9 @@ import {
     View
 } from 'react-native';
 
-import TestPage from './testpage.js';
-import SignInPage from './signinpage.js';
-import MapPage from './mappage.js';
+import TestPage from './components/testpage.js';
+import SignInPage from './components/signinpage.js';
+import MapPage from './components/mappage.js';
 
 export default class Main extends Component {
     renderScene(route, navigator) {

@@ -11,38 +11,14 @@ import {
   Text,
   View
 } from 'react-native';
-
-/*
-    goals: 
-        solve navigation problem
-        create a page class in separate file
-        render it here
-*/
+import TestPage from './testpage.js';
 
 export default class Main extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.txt}>
-          Something you did worked.
-        </Text>
-      </View>
+        <TestPage />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  txt: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-});
 
 AppRegistry.registerComponent('friendLocator', () => Main);

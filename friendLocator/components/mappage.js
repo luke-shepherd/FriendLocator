@@ -12,6 +12,7 @@ export default class MapPage extends Component {
         super(props);
         this.state = {
             loc: '',
+            interval: 1000,
         }
         this.style = StyleSheet.create({
             container: {
@@ -36,7 +37,7 @@ export default class MapPage extends Component {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({loc: JSON.stringify(position.coords)})
-            }, (error) => alert(JSON.stringify(error)),
+            }, (error) => console.log(JSON.stringify(error)),
             {enableHighAccuracy: true, timeout: 20000}
         )
     }

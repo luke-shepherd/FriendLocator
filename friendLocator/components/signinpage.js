@@ -18,7 +18,8 @@ export default class SignInPage extends Component {
             username: '',
             password: '',
             toggle: false,
-            buttonTitle: 'Sign Up'
+            buttonTitle: 'Sign Up',
+            actionText: '',
         }
 
         this.style = StyleSheet.create({
@@ -31,6 +32,8 @@ export default class SignInPage extends Component {
             text: {
                 fontSize: 35,
                 textAlign: 'center',
+                marginTop: 20,
+                marginBottom: 5,
             },
             inputbox: {
                 height: 60,
@@ -39,6 +42,7 @@ export default class SignInPage extends Component {
             },
             toggle: {
                 marginBottom: 10,
+                marginTop: 10,
             },
         });
     }
@@ -47,8 +51,59 @@ export default class SignInPage extends Component {
         this.props.nav.replace({id: sceneId});
     }
 
+    sendPacket(obj) {
+        var url = 'http://107.170.249.224:3000/test'
+        let response = fetch(url, obj)
+            .then((response) => response)
+            .then((resonseJson) => {
+                console.log(responseJson)
+                //read into json object and parse
+                return true
+            })
+            .catch((error) => {
+                console.log(error)
+                return false
+            })
+    }
+
+    constructPacket() {
+        var obj = {
+            method: 'POST',
+            
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            
+            body: JSON.stringify({
+                type: (this.state.toggle ? 'signup' : 'login'),
+                user: this.state.username,
+                pass: this.state.password,
+            })
+        }
+        return obj
+    }
+
     buttonAction = () => {
-        this.routeTo('MapPage')
+        var text = this.state.toggle ? 'Logging in... ' : 'Signing up... '
+        this.setState({actionText: text})
+
+        var obj = this.constructPacket()
+        //var success = this.sendPacket(obj)
+
+        //DEBUG
+        success = this.state.username == 'true' ? true: false
+
+        //simulate sending packet and recieving response
+        setTimeout( () => {
+            var result = success ? ' Success!': 'Failure.'
+            this.setState({actionText: this.state.actionText + result})
+            if (success) {
+                setTimeout( () => {
+                    this.routeTo('MapPage')
+                }, 1000)
+            }
+        }, 2000)
     }
 
     render() {
@@ -81,6 +136,10 @@ export default class SignInPage extends Component {
                     title={this.state.toggle ? 'Log In' : 'Sign Up'}
                     color='#841584'
                 />
+
+                <Text style={this.style.text}>
+                    {this.state.actionText}
+                </Text>
 
                 <Text style={this.style.text}>
                     User: {this.state.username}{'\n'}

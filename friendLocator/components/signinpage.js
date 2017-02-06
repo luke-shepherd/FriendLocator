@@ -52,13 +52,24 @@ export default class SignInPage extends Component {
     }
 
     sendPacket(obj) {
-        var url = 'http://107.170.249.224:3000/test'
+        var url = 'http://107.170.249.224:3000/'
+        url = this.state.toggle ? url + 'signin' : url + 'registration'
         let response = fetch(url, obj)
-            .then((response) => response)
+            .then((response) => response.json())
             .then((resonseJson) => {
                 console.log(responseJson)
                 //read into json object and parse
-                return true
+
+                /*
+                    body: {
+                        type: 'response',
+                        success: true,
+                        reason: 'could not find username'
+                    }
+                */
+
+                if (false) return true
+                return false
             })
             .catch((error) => {
                 console.log(error)
@@ -89,12 +100,17 @@ export default class SignInPage extends Component {
         this.setState({actionText: text})
 
         var obj = this.constructPacket()
-        //var success = this.sendPacket(obj)
+        var success = this.sendPacket(obj)
+
+        if (success) {
+            this.routeTo('MapPage')
+        }
 
         //DEBUG
-        success = this.state.username == 'true' ? true: false
+        //success = this.state.username == 'true' ? true: false
 
         //simulate sending packet and recieving response
+        /*
         setTimeout( () => {
             var result = success ? ' Success!': 'Failure.'
             this.setState({actionText: this.state.actionText + result})
@@ -104,6 +120,7 @@ export default class SignInPage extends Component {
                 }, 1000)
             }
         }, 2000)
+        */
     }
 
     render() {

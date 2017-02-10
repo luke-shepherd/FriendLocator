@@ -10,6 +10,8 @@ import {
     Switch
 } from 'react-native';
 
+globals = require('./globals')
+
 export default class SignInPage extends Component {
     constructor(props) {
         super(props);
@@ -52,7 +54,8 @@ export default class SignInPage extends Component {
     }
 
     sendPacket(obj) {
-        var url = 'http://107.170.249.224:3000/'
+        var url = globals.base_url
+        console.log('url: ' + url)
         url = this.state.toggle ? url + 'signin' : url + 'registration'
         let response = fetch(url, obj)
             .then((response) => response.json())

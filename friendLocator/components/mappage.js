@@ -7,6 +7,8 @@ import {
     Navigator
 } from 'react-native';
 
+globals = require('./globals')
+
 export default class MapPage extends Component {
     constructor(props) {
         super(props);

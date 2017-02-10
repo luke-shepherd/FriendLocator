@@ -55,7 +55,6 @@ export default class SignInPage extends Component {
 
     sendPacket(obj) {
         var url = globals.base_url
-        console.log('url: ' + url)
         url = this.state.toggle ? url + 'signin' : url + 'registration'
         let response = fetch(url, obj)
             .then((response) => response.json())
@@ -99,6 +98,11 @@ export default class SignInPage extends Component {
     }
 
     buttonAction = () => {
+
+        //DEBUG:
+        this.routeTo('MapPage')
+        return
+
         var text = this.state.toggle ? 'Logging in... ' : 'Signing up... '
         this.setState({actionText: text})
 
@@ -106,6 +110,7 @@ export default class SignInPage extends Component {
         var success = this.sendPacket(obj)
 
         if (success) {
+            globals.user = this.state.username
             this.routeTo('MapPage')
         }
 

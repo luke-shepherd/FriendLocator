@@ -34,6 +34,38 @@ app.use(bodyParser.json());
 
 app.set('port', process.env.PORT || 3000);
 
+var apiRoutes = express.Router(); 
+apiRoutes.post('/login', function(req, res){
+  console.log("Received name: ", req.body.name);
+  console.log("Received password: ", req.body.password);
+  
+  User.findOne({'name': req.body.name}, function(err,obj){
+    if(err) return handleError(err);
+    
+    console.log("Object received from query: ", obj);
+    
+    if(!obj){
+      res.json({"type": 'response',
+                "success": false,
+                "reason": 'User does not exist'});
+    }else if(req.body.password !== obj.password){
+       res.json({"type": 'response',
+                 "success": false,
+                 "reason": 'Incorrect password'});
+    }else{ 
+      var token = jwt.sign(user, app.get('superSecret'), {
+          expiresInMinutes: 1440 // expires in 24 hours
+      });          
+      res.json({"type": 'response',
+                "success": true,
+                "token" : token,
+                "reason": "Correct username and password"});
+    }
+ 
+  }); 
+});
+
+app.use('/api', apiRoutes);
 
 app.get('/', function(req, res){
    res.send("Hi!");

@@ -6,6 +6,7 @@ import {
     View,
     TextInput,
     ListView,
+    Button,
     Navigator
 } from 'react-native';
 
@@ -112,7 +113,11 @@ export default class SearchBar extends Component {
             temp.push(query)
             this.setState({results: temp})
         }
+    }
     
+    buttonAction(row) {
+        //this.routeTo('Userpage')
+        console.log('[*] pressed: ' + row)
     }
 
     render() {
@@ -122,15 +127,19 @@ export default class SearchBar extends Component {
                     style={this.style.inputbox}
                     onChangeText={(text) => this.onTextUpdate(text)}
                 />
+                {/*
                 <Text style={this.style.text}>
                     query: {this.state.text}
                 </Text>
+                */}
                 <ListView
                     dataSource={this.ds.cloneWithRows(this.state.results)}
                     renderRow={(row) => 
-                        <Text>
-                            {row}
-                        </Text>
+                        <Button
+                            onPress={() => this.buttonAction(row)}
+                            title={row}
+                            color='#841584'
+                        />
                     }
                     enableEmptySections={true}
                 />

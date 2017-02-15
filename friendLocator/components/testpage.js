@@ -25,6 +25,11 @@ export default class TestPage extends Component {
                 textAlign: 'center',
                 margin: 10,
             },
+            searchbar: {
+                position: 'absolute',
+                top: 20,
+                left: 150,
+            }
         });
     }
 
@@ -35,10 +40,12 @@ export default class TestPage extends Component {
     render() {
         return (
             <View style={this.style.container}>
-                <SearchBar/>
                 <Text style={this.style.text}>
                     it works.
                 </Text>
+                <View style={this.style.searchbar}>
+                    <SearchBar/>
+                </View>
             </View>
         );
     }

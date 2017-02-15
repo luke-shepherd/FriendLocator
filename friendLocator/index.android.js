@@ -13,8 +13,6 @@ import TestPage from './components/testpage.js';
 import SignInPage from './components/signinpage.js';
 import MapPage from './components/mappage.js';
 
-//http://stackoverflow.com/questions/33117227/setting-environment-variable-in-react-native
-
 export default class Main extends Component {
     renderScene(route, navigator) {
         switch(route.id) {

@@ -15,7 +15,6 @@ export default class MapPage extends Component {
         this.state = {
             loc: 'nolocation',
             user: 'nouser',
-            interval: 1000,
         }
         this.style = StyleSheet.create({
             container: {
@@ -71,27 +70,6 @@ export default class MapPage extends Component {
     }
 
     componentDidMount() {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                this.setState({loc: JSON.stringify(position)})
-                console.log(this.state.loc)
-            }, (error) => console.log(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 20000}
-        )
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                this.setState({loc: JSON.stringify(position)})
-                console.log(this.state.loc)
-            }, (error) => console.log(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 20000}
-        )
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                this.setState({loc: JSON.stringify(position)})
-                console.log(this.state.loc)
-            }, (error) => console.log(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 20000}
-        )
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({loc: JSON.stringify(position)})

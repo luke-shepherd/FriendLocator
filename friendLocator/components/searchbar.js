@@ -55,14 +55,6 @@ export default class SearchBar extends Component {
                 console.log(responseJson)
                 //parse
 
-                /*
-                    body: {
-                        type: 'response',
-                        success: true,
-                        reason: 'could not find username'
-                    }
-                */
-            
                 //var gotResults = ['search', 'result', 'list']
                 //this.setState({results: gotResults})
 
@@ -75,7 +67,7 @@ export default class SearchBar extends Component {
             })
     }
 
-    constructPacket() {
+    constructPacket(searchText) {
         var obj = {
             method: 'POST',
             
@@ -87,6 +79,7 @@ export default class SearchBar extends Component {
             body: JSON.stringify({
                 type: 'search',
                 user: this.state.username,
+                query: searchText,
             })
         }
         return obj
@@ -99,7 +92,7 @@ export default class SearchBar extends Component {
             send request to server, parse response
         */
 
-        //var obj = this.constructPacket()
+        //var obj = this.constructPacket(query)
         //var success = this.sendPacket(obj)
         var success = true
 

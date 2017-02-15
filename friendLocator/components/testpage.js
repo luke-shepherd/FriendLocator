@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 globals = require('./globals')
+import SearchBar from './searchbar.js';
 
 export default class TestPage extends Component {
     constructor(props) {
@@ -34,6 +35,7 @@ export default class TestPage extends Component {
     render() {
         return (
             <View style={this.style.container}>
+                <SearchBar/>
                 <Text style={this.style.text}>
                     it works.
                 </Text>

@@ -27,7 +27,7 @@ export default class Main extends Component {
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'SignInPage'}}
+                initialRoute={{id: 'TestPage'}}
                 renderScene={this.renderScene.bind(this)}
             />
         );

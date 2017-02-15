@@ -60,7 +60,7 @@ export default class SignInPage extends Component {
             .then((response) => response.json())
             .then((resonseJson) => {
                 console.log(responseJson)
-                //read into json object and parse
+                //parse
 
                 /*
                     body: {

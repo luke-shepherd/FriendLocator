@@ -37,7 +37,7 @@ export default class MapPage extends Component {
     }
 
     sendPacket(obj) {
-        var url = 'http://107.170.249.224:3000/update' //FIXME:
+        var url = globals.base_url + 'update'
         let response = fetch(url, obj)
             .then((response) => response.json())
             .then((resonseJson) => {
@@ -74,6 +74,28 @@ export default class MapPage extends Component {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({loc: JSON.stringify(position)})
+                console.log(this.state.loc)
+            }, (error) => console.log(JSON.stringify(error)),
+            {enableHighAccuracy: true, timeout: 20000}
+        )
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({loc: JSON.stringify(position)})
+                console.log(this.state.loc)
+            }, (error) => console.log(JSON.stringify(error)),
+            {enableHighAccuracy: true, timeout: 20000}
+        )
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({loc: JSON.stringify(position)})
+                console.log(this.state.loc)
+            }, (error) => console.log(JSON.stringify(error)),
+            {enableHighAccuracy: true, timeout: 20000}
+        )
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({loc: JSON.stringify(position)})
+                console.log(this.state.loc)
             }, (error) => console.log(JSON.stringify(error)),
             {enableHighAccuracy: true, timeout: 20000}
         )

@@ -6,7 +6,7 @@ import {
     View,
     TextInput,
     ListView,
-    Button,
+    TouchableHighlight,
     Navigator
 } from 'react-native';
 
@@ -34,8 +34,8 @@ export default class SearchBar extends Component {
                 width: 300,
                 fontSize: 20,
             },
-            text: {
-                fontSize: 35,
+            rowtext: {
+                fontSize: 20,
                 textAlign: 'center',
                 marginTop: 20,
                 marginBottom: 5,
@@ -108,9 +108,9 @@ export default class SearchBar extends Component {
         }
     }
     
-    buttonAction(row) {
+    buttonAction(user) {
         //this.routeTo('Userpage')
-        console.log('[*] pressed: ' + row)
+        console.log('[*] pressed: ' + user)
     }
 
     render() {
@@ -120,19 +120,17 @@ export default class SearchBar extends Component {
                     style={this.style.inputbox}
                     onChangeText={(text) => this.onTextUpdate(text)}
                 />
-                {/*
-                <Text style={this.style.text}>
-                    query: {this.state.text}
-                </Text>
-                */}
                 <ListView
                     dataSource={this.ds.cloneWithRows(this.state.results)}
                     renderRow={(row) => 
-                        <Button
+                        <TouchableHighlight 
                             onPress={() => this.buttonAction(row)}
-                            title={row}
-                            color='#841584'
-                        />
+                            underlayColor='#dcdcdc'
+                        >
+                            <Text style={this.style.rowtext}>
+                                {row}
+                            </Text>
+                        </TouchableHighlight>
                     }
                     enableEmptySections={true}
                 />

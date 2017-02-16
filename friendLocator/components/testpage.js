@@ -9,6 +9,7 @@ import {
 
 globals = require('./globals')
 import SearchBar from './searchbar.js';
+import NavBar from './navbar.js';
 
 export default class TestPage extends Component {
     constructor(props) {
@@ -27,9 +28,15 @@ export default class TestPage extends Component {
             },
             searchbar: {
                 position: 'absolute',
-                top: 20,
+                top: 60,
                 left: 150,
-            }
+            },
+            navbar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+            },
         });
     }
 
@@ -40,6 +47,9 @@ export default class TestPage extends Component {
     render() {
         return (
             <View style={this.style.container}>
+                <View style={this.style.navbar}>
+                    <NavBar/>
+                </View>
                 <Text style={this.style.text}>
                     it works.
                 </Text>

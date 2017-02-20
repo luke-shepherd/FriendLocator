@@ -137,8 +137,8 @@ dependencies {
     //compile 'com.google.android.gms:play-services:10.2.0' 
     compile 'com.google.android.gms:play-services-gcm:10.2.0'
     compile 'com.google.android.gms:play-services-location:10.2.0'
-    //compile 'com.airbnb.android:react-native-maps:0.12.4' 
-    compile project(':react-native-maps')
+    compile 'com.airbnb.android:react-native-maps:0.7.1' 
+    //compile project(':react-native-maps')
 
 }
 

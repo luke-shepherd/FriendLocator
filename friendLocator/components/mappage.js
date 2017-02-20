@@ -7,9 +7,6 @@ import {
     Navigator
 } from 'react-native';
 
-import MapView from 'react-native-maps';
-
-
 globals = require('./globals')
 
 export default class MapPage extends Component {
@@ -22,21 +19,14 @@ export default class MapPage extends Component {
         this.style = StyleSheet.create({
             container: {
                 flex: 1,
-                StyleSheet.absoluteFillObject,
-                height: 400,
-                width: 400,
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',
-
             },
             text: {
                 fontSize: 20,
                 textAlign: 'center',
                 margin: 10,
-            },
-            map: {
-                StyleSheet.absoluteFillObject,
             },
         });
     }
@@ -90,20 +80,15 @@ export default class MapPage extends Component {
     }
 
     render() {
-        const { region } = this.props;
-        console.log(region);
         return (
-            <View style={styles.container}>
-               <MapView
-                    style={styles.map}
-                    region={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: 0.015,
-                        longitudeDelta: 0.0121,
-                    }}
-                >
-                </MapView>
+            <View style={this.style.container}>
+                <Text style={this.style.text}>
+                    Map Page
+                </Text>
+
+                <Text style={this.style.text}>
+                    Location: {this.state.loc}
+                </Text>
             </View>
         );
     }

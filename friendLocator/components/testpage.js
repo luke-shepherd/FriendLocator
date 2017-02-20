@@ -7,6 +7,8 @@ import {
     Navigator
 } from 'react-native';
 
+//import MapView from 'react-native-maps';
+
 globals = require('./globals')
 import SearchBar from './searchbar.js';
 import NavBar from './navbar.js';
@@ -44,18 +46,27 @@ export default class TestPage extends Component {
         this.props.nav.replace({id: sceneId});
     }
 
+    /*
+    <MapView
+                    initialRegion={{
+                        latitude: 37.78825,
+                        longitude: -122.4324,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                />
+                */
+
     render() {
         return (
             <View style={this.style.container}>
                 <View style={this.style.navbar}>
                     <NavBar/>
                 </View>
-                <Text style={this.style.text}>
-                    it works.
-                </Text>
                 <View style={this.style.searchbar}>
                     <SearchBar/>
                 </View>
+                
             </View>
         );
     }

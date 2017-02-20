@@ -7,6 +7,10 @@ import {
     Navigator
 } from 'react-native';
 
+globals = require('./globals')
+import SearchBar from './searchbar.js';
+import NavBar from './navbar.js';
+
 export default class TestPage extends Component {
     constructor(props) {
         super(props);
@@ -22,6 +26,17 @@ export default class TestPage extends Component {
                 textAlign: 'center',
                 margin: 10,
             },
+            searchbar: {
+                position: 'absolute',
+                top: 60,
+                left: 150,
+            },
+            navbar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+            },
         });
     }
 
@@ -32,9 +47,15 @@ export default class TestPage extends Component {
     render() {
         return (
             <View style={this.style.container}>
+                <View style={this.style.navbar}>
+                    <NavBar/>
+                </View>
                 <Text style={this.style.text}>
                     it works.
                 </Text>
+                <View style={this.style.searchbar}>
+                    <SearchBar/>
+                </View>
             </View>
         );
     }

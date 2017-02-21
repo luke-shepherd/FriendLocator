@@ -7,7 +7,7 @@ import {
     Navigator
 } from 'react-native';
 
-//import MapView from 'react-native-maps';
+import MapView from 'react-native-maps';
 
 globals = require('./globals')
 import SearchBar from './searchbar.js';
@@ -30,6 +30,7 @@ export default class TestPage extends Component {
             },
             searchbar: {
                 position: 'absolute',
+                alignItems: 'center',
                 top: 60,
                 left: 150,
             },
@@ -39,6 +40,13 @@ export default class TestPage extends Component {
                 left: 0,
                 right: 0,
             },
+            map: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0
+            },
         });
     }
 
@@ -46,8 +54,14 @@ export default class TestPage extends Component {
         this.props.nav.replace({id: sceneId});
     }
 
-    /*
-    <MapView
+    render() {
+        return (
+            <View style={this.style.container}>
+                <View style={this.style.navbar}>
+                    <NavBar/>
+                </View>
+                <MapView
+                    style={this.style.map}
                     initialRegion={{
                         latitude: 37.78825,
                         longitude: -122.4324,
@@ -55,18 +69,9 @@ export default class TestPage extends Component {
                         longitudeDelta: 0.0421,
                     }}
                 />
-                */
-
-    render() {
-        return (
-            <View style={this.style.container}>
-                <View style={this.style.navbar}>
-                    <NavBar/>
-                </View>
                 <View style={this.style.searchbar}>
                     <SearchBar/>
                 </View>
-                
             </View>
         );
     }

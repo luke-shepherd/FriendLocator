@@ -31,8 +31,8 @@ export default class TestPage extends Component {
             searchbar: {
                 position: 'absolute',
                 alignItems: 'center',
-                top: 60,
-                left: 150,
+                top: 50,
+                left: 0,
             },
             navbar: {
                 position: 'absolute',
@@ -63,8 +63,8 @@ export default class TestPage extends Component {
                 <MapView
                     style={this.style.map}
                     initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
+                        latitude: 36.9741,
+                        longitude: -122.0308,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}

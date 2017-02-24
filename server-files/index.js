@@ -35,38 +35,7 @@ app.use(bodyParser.json());
 
 app.set('port', process.env.PORT || 8080);
 
-var apiRoutes = express.Router(); 
-apiRoutes.post('/login', function(req, res){
-  console.log("Received name: ", req.body.name);
-  console.log("Received password: ", req.body.password);
-  
-  User.findOne({'name': req.body.name}, function(err,obj){
-    if(err) return handleError(err);
-    
-    console.log("Object received from query: ", obj);
-    
-    if(!obj){
-      res.json({"type": 'response',
-                "success": false,
-                "reason": 'User does not exist'});
-    }else if(req.body.password !== obj.password){
-       res.json({"type": 'response',
-                 "success": false,
-                 "reason": 'Incorrect password'});
-    }else{ 
-      var token = jwt.sign(user, app.get('superSecret'), {
-          expiresInMinutes: 1440 // expires in 24 hours
-      });          
-      res.json({"type": 'response',
-                "success": true,
-                "token" : token,
-                "reason": "Correct username and password"});
-    }
- 
-  }); 
-});
 
-app.use('/api', apiRoutes);
 
 //API ROUTES =================================================================
 //============================================================================
@@ -76,16 +45,16 @@ Searched MongoDB for a name with the name key and creates a new User model to be
 */
 app.post('/registration', function(req, res){
    //Store form into DB
-   console.log("Received name: ", req.body.name);
-   console.log("Received password: ", req.body.password);
+   console.log("Received name: ", req.body.user);
+   console.log("Received password: ", req.body.pass);
    
-  User.findOne({'name': req.body.name}, function(err, obj){
+  User.findOne({'name': req.body.user}, function(err, obj){
     if (err) return handleError(err);
     
     console.log("Object received from query: ", obj);
 
     if(!obj){
-      var newUser = new User({name : req.body.name, password: req.body.password});
+      var newUser = new User({name : req.body.user, password: req.body.pass});
       newUser.save(function (err,obj,numAffected){
         if(err) return handleError(err);
         res.json({"type": 'response',
@@ -125,7 +94,7 @@ apiRoutes.post('/login', function(req,res){
                 expiresIn: 60*24 // expires in 24 hours
          });
          obj.token = token;
-         res.json({"type": 'response',
+         res.json({"type": "response",
                     "success": true,
                     "token" : token,
                     "reason": 'Correct username and password'});
@@ -158,23 +127,14 @@ apiRoutes.use(function(req, res, next){
 
 //Friend request route
 apiRoutes.post('/friendrequest/:username', function(req, res){
-   console.log("Requesting friend for: ", req.params.username);
-   console.log("Request decoded token: ", req.decoded);    
-   User.findOne({'token': req.decoded}, function(err, obj){
-       if(err) return handleError(err);
-       console.log("Object received from query: ", obj);
-       if(!obj){
-        res.json({"type": 'response',
-                  "success": false,
-                  "reason": 'Invalid token'});
-       }else{
-          var requesting_user = obj.name;
-          console.log("Requesting user: ", requesting_user);    
-       }             
-   });
-   
+   var requesting_user = req.body.name;
+   console.log("Requesting user: ", requesting_user);  
+   console.log("Requesting friend for: ", req.params.username);   
 
-   User.findOneAndUpdate({'name': req.params.username, 'friends_request': { $ne: requesting_user}}, {$push: {friends_request: requesting_user}}, {new: true}, function(err, obj){
+   User.findOneAndUpdate({'name': req.params.username,
+			  'friends_request': { $ne: requesting_user}},
+			   {$push: {friends_request: requesting_user}},
+			   {new: true}, function(err, obj){
       if(err) return handleError(err);
       
       if(obj == null){
@@ -190,8 +150,138 @@ apiRoutes.post('/friendrequest/:username', function(req, res){
 
 });
 
-//Friend page route
-apiRoutes.get('/friendpage/', function(req, res){
+//Accept friend request route
+apiRoutes.post('/friendrequest/accept/:username', function(req, res){
+   var requesting_user = req.body.name;
+   console.log("Requesting user: ", requesting_user);  
+   console.log("Requesting friend for: ", req.params.username);   
+   
+   //Update friends list of requesting user
+   User.findOneAndUpdate({'name': requesting_user},
+               {$pull: {friends_request: req.params.username},
+			   {$push: {friends_list: req.params.username}},
+			   {new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'response',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+        console.log("Requesting user object: ", obj); 
+        console.log("Friends request array: ", obj.friends_request); 
+      }
+   });
+   
+   //Update friends list of friend
+   User.findOneAndUpdate({'name': req.params.username},
+			   {$push: {friends_list: requesting_user}},
+			   {new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'response',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+        console.log("Friend object: ", obj); 
+        console.log("Friends request array: ", obj.friends_request); 
+        res.json({"type": 'response',
+                  "success": true});
+      }
+   });
+   
+});
+
+//Reject friend request route
+apiRoutes.post('/friendrequest/reject/:username', function(req, res){
+   var requesting_user = req.body.name;
+   console.log("Requesting user: ", requesting_user);  
+   console.log("Requesting friend for: ", req.params.username);   
+
+   //Update friends request of requesting user
+    User.findOneAndUpdate({'name': requesting_user},
+               {$pull: {friends_request: req.params.username},
+			   {new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'response',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+        console.log("Requesting user object: ", obj); 
+        console.log("Friends request array: ", obj.friends_request); 
+      }
+   });
+   
+   var reject_notification = requesting_user + "has rejected your friend request";
+   console.log("Reject notification:", reject_notifcation);
+   
+    //Update notifications list of friend
+   User.findOneAndUpdate({'name': req.params.username},
+			   {$push: {notifications: reject_notifcation}},
+			   {new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'response',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+        console.log("Friend object: ", obj); 
+        console.log("Notifications: ", obj.notifications); 
+        res.json({"type": 'response',
+                  "success": true});
+      }
+   });
+   
+});
+
+//Delete friend for both users route
+apiRoutes.post('/friendpage/delete/:username', function(req, res){
+    var requesting_user = req.body.name;
+    console.log("Requesting user: ", requesting_user);
+    console.log("Delete user: ", req.params.username);
+    
+    //Update friends list of requesting user
+    User.findOneAndUpdate({'name':requesting_user},
+                            {$pull: {friends_list: req.params.username}},
+                            {new: true}, function(err, obj){
+          if(err) return handleError(err);
+          
+          if(obj == null){
+         res.json({"type": 'response',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+        console.log("Requesting user object: ", obj);
+        console.log("Friends list array: ", obj.friends_list); 
+      }
+   });
+   
+   //Update friends list of friend
+   User.findOneAndUpdate({'name':req.params.username},
+                            {$pull: {friends_list: requesting_user}},
+                            {new: true}, function(err, obj){
+          if(err) return handleError(err);
+          
+          if(obj == null){
+         res.json({"type": 'response',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+         console.log("Friend object: ", obj); 
+        console.log("Friends list array: ", obj.friends_list); 
+        res.json({"type": 'response',
+                  "success": true});
+      }
+   });   
+
+});
+
+//General friend page route
+apiRoutes.post('/friendpage/', function(req, res){
     var requesting_user = req.body.name;
     console.log("Requesting user: ", requesting_user);
     
@@ -210,14 +300,66 @@ apiRoutes.get('/friendpage/', function(req, res){
                 "friends_request": obj.friends_request,
                 "friends": obj.friends_list});
         }
- 
     }); 
-
+    
 });
 
-//To do: Accept friend request route
+//Groups page route
+apiRoutes.post('/grouppage/', function(req, res){
+    var requesting_user = req.body.name;
+    console.log("Requesting user: ", requesting_user);
+    
+    User.findOne({'name': req.body.name}, function(err,obj){
+        if(err) return handleError(err);
+    
+        console.log("Object received from query: ", obj);
+    
+        if(obj == null){
+            res.json({"type": 'response',
+                "success": false,
+                "reason": 'Error: User does not exist'});
+        }else{ 
+            res.json({"type": 'response',
+                "success": true,
+                "friends_request": obj.friends_request,
+                "friends": obj.friends_list});
+        }
+    }); 
+ 
+});
 
-//To do: Reject friend request route
+//Create group route
+apiRoutes.post('/grouppage/create/:name', function(req, res){
+    var requesting_user = req.body.name;
+    console.log("Requesting user: ", requesting_user);
+    
+    User.findOneAndUpdate({'name': req.params.username,
+			   {$push: {groups: req.params.name}},
+			   {new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'response',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+        console.log("Friends request array: ", obj.friends_request); 
+        res.json({"type": 'response',
+                  "success": true});
+      }
+   });
+ 
+});
+
+//Delete group route
+
+//Add friends to a group route
+
+//Delete friends from a group route
+
+//Send location to people in group route
+
+//Upload profile pic route
 
 
 app.use('/api', apiRoutes);

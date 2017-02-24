@@ -111,8 +111,8 @@ export default class MapPage extends Component {
                 <MapView
                     style={this.style.map}
                     initialRegion={{
-                        latitude: 46.78825,
-                        longitude: -122.4324,
+                        latitude: 36.97,
+                        longitude: -122.0324,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}

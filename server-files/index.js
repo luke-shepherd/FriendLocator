@@ -184,6 +184,17 @@ apiRoutes.get('/friendpage/', function(req, res){
 
 });
 
+
+apiroutes.get('/search', function(req,res){
+  var friendsList = req.body.list;
+  console.log("Users friend list", friendsList);
+
+  var mutualFriends = [];
+  for each (user in friendsList){
+    
+  }
+})
+
 //To do: Accept friend request route
 
 //To do: Reject friend request route

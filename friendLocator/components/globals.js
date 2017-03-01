@@ -17,5 +17,12 @@ module.exports = {
     loc_replys:         [],
     friend_requests :   [],
     friend_replys :     [],
+
+    userLocation: {
+        lat: '',
+        long: '',
+    },
+
+    firendlocs: {},
 }
 

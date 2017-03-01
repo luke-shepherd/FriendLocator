@@ -12,6 +12,7 @@ import {
 import TestPage from './components/testpage.js';
 import SignInPage from './components/signinpage.js';
 import MapPage from './components/mappage.js';
+import UserPage from './components/userpage.js';
 
 export default class Main extends Component {
     renderScene(route, navigator) {
@@ -19,13 +20,14 @@ export default class Main extends Component {
             case 'SignInPage':  return (<SignInPage nav={navigator}/>);
             case 'TestPage':    return (<TestPage nav={navigator}/>);
             case 'MapPage':    return (<MapPage nav={navigator}/>);
+            case 'UserPage':   return (<UserPage nav={navigator}/>);
         }
     }
 
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'SignInPage'}}
+                initialRoute={{id: 'UserPage'}}
                 renderScene={this.renderScene.bind(this)}
             />
         );

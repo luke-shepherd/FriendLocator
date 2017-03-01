@@ -13,6 +13,7 @@ globals = require('./globals')
 import SearchBar from './searchbar.js';
 import NavBar from './navbar.js';
 
+
 export default class TestPage extends Component {
     constructor(props) {
         super(props);

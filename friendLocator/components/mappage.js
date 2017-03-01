@@ -12,12 +12,15 @@ import MapView from 'react-native-maps';
 globals = require('./globals')
 import SearchBar from './searchbar.js';
 import NavBar from './navbar.js';
+import CustomMap from './CustomMap.js';
 
 export default class MapPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loc: 'nolocation',
+            loc: {  longitude: -122.032,
+                    latitude: 36.96},
+
             user: 'nouser',
         }
         this.style = StyleSheet.create({
@@ -53,6 +56,7 @@ export default class MapPage extends Component {
             },
         });
     }
+
 
     routeTo(sceneId) {
         this.props.nav.replace({id: sceneId});
@@ -93,13 +97,52 @@ export default class MapPage extends Component {
     }
 
     componentDidMount() {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                this.setState({loc: JSON.stringify(position)})
-                console.log(this.state.loc)
-            }, (error) => console.log(JSON.stringify(error)),
-            {enableHighAccuracy: true, timeout: 20000}
-        )
+
+        setInterval( () => {
+
+            //setting location
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    this.setState({loc: position.coords})
+                    console.log("-------FOUND POSITION--------")
+                    console.log(this.state.loc)
+                    console.log(`Longitude: ${this.state.loc.longitude}`)
+
+                    globals.userLocation.lat = position.coords.latitude;
+                    globals.userLocation.long = position.coords.longitude;
+
+                    //query friend locations
+
+                    if (globals.friendloc.length() > 0) {
+
+                        for (var friend in friendloc) {
+
+                            //query all friend locations 
+                            //this.constructpacket()
+                            //this.sendpacket(obj)
+
+                            //display on map   
+                            //globals.friendlocs[friend].lat = obj.position.lat
+                            //globals.friendlocs[friend].long = obj.position.long 
+                        }
+                      
+
+                        globals.userLocation.lat = position.coords.latitude;
+                        globals.userLocation.long = position.coords.longitude;
+
+                    }
+
+                    //set region
+
+                }, (error) => console.log(JSON.stringify(error)),
+                {enableHighAccuracy: false, timeout: 20000}
+            )
+        }, 1000)
+
+        ///this.watchID = navigator.geolocation.watchPosition((position) => {
+         //   var lastPosition = JSON.stringify(position);
+        //    this.setState({loc: lastPosition.coords});
+       // });
     }
 
     render() {
@@ -108,15 +151,13 @@ export default class MapPage extends Component {
                 <View style={this.style.navbar}>
                     <NavBar/>
                 </View>
-                <MapView
-                    style={this.style.map}
-                    initialRegion={{
-                        latitude: 36.97,
-                        longitude: -122.0324,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-                />
+                <MapView style={style.map}
+                    region={{
+                        latitude: globals.userLocation.lat,
+                        latitudeDelta: 0.001,
+                        longitude: globals.userLocation.long,
+                        longitudeDelta: 0.001
+                }} />
                 <View style={this.style.searchbar}>
                     <SearchBar/>
                 </View>

@@ -185,15 +185,25 @@ apiRoutes.get('/friendpage/', function(req, res){
 });
 
 
-apiroutes.get('/search', function(req,res){
+apiRoutes.get('/search', function(req,res){
   var friendsList = req.body.list;
   console.log("Users friend list", friendsList);
 
   var mutualFriends = [];
-  for each (user in friendsList){
-    
+  for  (var i = 0 ; i < mutualFriends.length; i++){
+    var user = mutualFriends[i]
+     User.findOne({'name': user}, function(err,obj){
+        if(err) return handleError(err);
+
+        if (obj){
+          console.log("Object received from query: ", obj);
+          var user_friendList = obj.friends_list
+          for  (var j =0; j < user_friendList.length; j++){
+            mutualFriends.append(user_friendList[j])
+          }
+        }
+      });
   }
-})
 
 //To do: Accept friend request route
 

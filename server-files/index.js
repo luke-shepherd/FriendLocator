@@ -204,6 +204,7 @@ apiRoutes.get('/search', function(req,res){
         }
       });
   }
+});
 
 //To do: Accept friend request route
 

@@ -27,11 +27,11 @@ var send = function(obj, endpoint, type, action) {
 
             //parse response depending on 
             switch(type) {
+                //NOTE: do not return true, just break
                 case 'login':
                     console.log('logging user in')
-                    //parse and set global values
+                    //parse and set global variables
                     //return false here if problem
-                    //NOTE: do not return true, just break
                     break
                 case 'signup':
                     console.log('signing user up')

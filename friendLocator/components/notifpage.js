@@ -45,10 +45,6 @@ export default class NotifPage extends Component {
         });
     }
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
     highlightAction(notif) {
         console.log('[*] pressed: ' + notif)
         //route to user profile of notification (ie your friend)

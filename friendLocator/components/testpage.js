@@ -50,10 +50,6 @@ export default class TestPage extends Component {
         });
     }
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
     render() {
         return (
             <View style={this.style.container}>

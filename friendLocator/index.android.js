@@ -13,9 +13,11 @@ import TestPage from './components/testpage.js';
 import SignInPage from './components/signinpage.js';
 import MapPage from './components/mappage.js';
 import NotifPage from './components/notifpage.js';
+globals = require('./components/globals')
 
 export default class Main extends Component {
     renderScene(route, navigator) {
+        globals.nav = navigator
         switch(route.id) {
             case 'SignInPage':  return (<SignInPage nav={navigator}/>);
             case 'TestPage':    return (<TestPage nav={navigator}/>);
@@ -27,7 +29,7 @@ export default class Main extends Component {
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'NotifPage'}}
+                initialRoute={{id: 'SignInPage'}}
                 renderScene={this.renderScene.bind(this)}
             />
         );

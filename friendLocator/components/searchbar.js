@@ -43,48 +43,6 @@ export default class SearchBar extends Component {
         });
     }
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
-    sendPacket(obj) {
-        var url = globals.base_url + 'endpoint'
-        let response = fetch(url, obj)
-            .then((response) => response.json())
-            .then((resonseJson) => {
-                console.log(responseJson)
-                //parse
-
-                //var gotResults = ['search', 'result', 'list']
-                //this.setState({results: gotResults})
-
-                if (false) return true
-                return false
-            })
-            .catch((error) => {
-                console.log(error)
-                return false
-            })
-    }
-
-    constructPacket(searchText) {
-        var obj = {
-            method: 'POST',
-            
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            
-            body: JSON.stringify({
-                type: 'search',
-                user: this.state.username,
-                query: searchText,
-            })
-        }
-        return obj
-    }
-
     onTextUpdate(query) {
         this.setState({text: query})
         

@@ -54,44 +54,6 @@ export default class MapPage extends Component {
         });
     }
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
-    sendPacket(obj) {
-        var url = globals.base_url + 'update'
-        let response = fetch(url, obj)
-            .then((response) => response.json())
-            .then((resonseJson) => {
-                console.log(responseJson)
-                //read into json object and parse
-                if (false) return true
-                return false
-            })
-            .catch((error) => {
-                console.log(error)
-                return false
-            })
-    }
-
-    constructPacket() {
-        var obj = {
-            method: 'POST',
-            
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            
-            body: JSON.stringify({
-                type: 'locationUpdate',
-                user: this.state.user,
-                userLocation: this.state.loc,
-            })
-        }
-        return obj
-    }
-
     componentDidMount() {
         
         //check for notifications on interval defined in global

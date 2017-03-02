@@ -1,4 +1,58 @@
 
+var construct = function(obj) {
+    var packet = {
+        method: 'POST',
+        
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        
+        body: JSON.stringify(obj)
+    }
+    return packet
+}
+
+var send = function(obj, endpoint, type, action) {
+
+    //DEBUG
+    action()
+    return true
+    
+    var url = endpoint
+    let response = fetch(url, obj)
+        .then((response) => response.json())
+        .then((resonseJson) => {
+            console.log(responseJson)
+
+            //parse response depending on 
+            switch(type) {
+                case 'login':
+                    console.log('logging user in')
+                    //parse and set global values
+                    //return false here if problem
+                    //NOTE: do not return true, just break
+                    break
+                case 'signup':
+                    console.log('signing user up')
+                    break
+            }
+
+            //action always invoked by default
+            action()
+            return true
+        })
+        .catch((error) => {
+            console.log(error)
+            return false
+        })
+    }
+
+var route = function(sceneId) {
+    console.log('navigating to: ' + sceneId)
+    module.exports.nav.replace({id: sceneId});
+}
+
 module.exports = {
 
     //server info
@@ -17,5 +71,10 @@ module.exports = {
     loc_replys:         [],
     friend_requests :   [],
     friend_replys :     [],
+
+    nav: '',
+    sendPacket: send,
+    constructPacket: construct,
+    routeTo: route,
 }
 

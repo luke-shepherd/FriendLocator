@@ -13,7 +13,7 @@ var construct = function(obj) {
     return packet
 }
 
-var send = function(obj, endpoint, type, action) {
+var send = function(obj, endpoint, action) {
 
     //DEBUG
     action()
@@ -26,14 +26,18 @@ var send = function(obj, endpoint, type, action) {
             console.log(responseJson)
 
             //parse response depending on 
+            //var type = responseJson.type
+            var type = 'loginrtn'
+
+
             switch(type) {
                 //NOTE: do not return true, just break
-                case 'login':
+                case 'loginrtn':
                     console.log('logging user in')
                     //parse and set global variables
                     //return false here if problem
                     break
-                case 'signup':
+                case 'signuprtn':
                     console.log('signing user up')
                     break
             }

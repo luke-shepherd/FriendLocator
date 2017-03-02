@@ -58,9 +58,9 @@ export default class SignInPage extends Component {
         var text = this.state.toggle ? 'Logging in... ' : 'Signing up... '
         this.setState({actionText: text})
 
-        var ptype = this.state.toggle ? 'signup' : 'login'
+        var type = this.state.toggle ? 'signup' : 'login'
         var obj = globals.constructPacket(
-            {type: ptype,
+            {type: type,
              user: this.state.username,
              pass: this.state.password,})
 
@@ -73,7 +73,7 @@ export default class SignInPage extends Component {
         //}
 
         //var success = globals.sendPacket(obj, url, onSuccess)
-        var success = globals.sendPacket(obj, url, ptype,
+        var success = globals.sendPacket(obj, url,
             () => {
                 globals.routeTo('MapPage')
                 globals.user = this.state.username

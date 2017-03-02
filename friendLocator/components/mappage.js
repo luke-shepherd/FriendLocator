@@ -93,6 +93,13 @@ export default class MapPage extends Component {
     }
 
     componentDidMount() {
+        
+        //check for notifications on interval defined in global
+        setInterval( () => {
+            //var obj = constructPacket()
+            //sendPacket(obj)
+        }, globals.notificationinterval)
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({loc: JSON.stringify(position)})

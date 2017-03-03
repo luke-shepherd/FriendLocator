@@ -45,6 +45,7 @@ var send = function(obj, endpoint, action) {
                         //return false here if problem
                         console.log('token:')
                         console.log(response.token)
+                        globals.token = response.token
                     }
                     else {
                         console.log('log in fail:')

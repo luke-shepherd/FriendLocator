@@ -6,6 +6,7 @@ var construct = function(obj) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
+            'x-access-token': globals.token,
         },
         
         body: JSON.stringify(obj)
@@ -24,17 +25,32 @@ var send = function(obj, endpoint, action) {
         //.then((response) => response.json())
         .then((response) => {
             
+            //console.log('TYPE IS: ' + JSON.parse(response._bodyText)["type"])
+
+            j = JSON.parse(response._bodyText))
             console.log('RESPONSE: ');
-            console.log(JSON.parse(response._bodyText));
-            console.log('TYPE IS: ' + JSON.parse(response._bodyText)["type"])
+            console.log(j);
 
+            try {
+                console.log('trying 1')
+                console.log(j.type)
+            }
+            catch (e) {
+                console.log('1 didnt work')
+            }
 
+            try {
+                console.log('trying 2')
+                console.log(j['type'])
+            }
+            catch (e) {
+                console.log('2 didnt work')
+            }
 
             //parse response depending on 
             //var type = responseJson.type
             //var type = responseJson.type
             var type = 'login'
-
 
             switch(type) {
                 //NOTE: do not return true, just break

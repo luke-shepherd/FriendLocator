@@ -55,8 +55,11 @@ var send = function(obj, endpoint, action) {
                 case 'registration':
                     console.log('signing user up')
                     break
-            }
+                default:
+                    console.log('Receive unknown type ERROR WILL ROBINSON');
+                    break
 
+            }
             //action always invoked by default
             action()
             return true

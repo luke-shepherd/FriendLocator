@@ -14,13 +14,18 @@ import SignInPage from './components/signinpage.js';
 import MapPage from './components/mappage.js';
 import UserPage from './components/userpage.js';
 
+import NotifPage from './components/notifpage.js';
+globals = require('./components/globals')
+
 export default class Main extends Component {
     renderScene(route, navigator) {
+        globals.nav = navigator
         switch(route.id) {
             case 'SignInPage':  return (<SignInPage nav={navigator}/>);
             case 'TestPage':    return (<TestPage nav={navigator}/>);
             case 'MapPage':    return (<MapPage nav={navigator}/>);
             case 'UserPage':   return (<UserPage nav={navigator}/>);
+            case 'NotifPage':    return (<NotifPage nav={navigator}/>);
         }
     }
 

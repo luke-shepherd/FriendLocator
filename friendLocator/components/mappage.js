@@ -18,8 +18,7 @@ export default class MapPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loc: {  longitude: -122.032,
-                    latitude: 36.96},
+            loc: '',
 
             user: 'nouser',
         }
@@ -58,91 +57,26 @@ export default class MapPage extends Component {
     }
 
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
-    sendPacket(obj) {
-        var url = globals.base_url + 'update'
-        let response = fetch(url, obj)
-            .then((response) => response.json())
-            .then((resonseJson) => {
-                console.log(responseJson)
-                //read into json object and parse
-                if (false) return true
-                return false
-            })
-            .catch((error) => {
-                console.log(error)
-                return false
-            })
-    }
-
-    constructPacket() {
-        var obj = {
-            method: 'POST',
-            
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            
-            body: JSON.stringify({
-                type: 'locationUpdate',
-                user: this.state.user,
-                userLocation: this.state.loc,
-            })
-        }
-        return obj
-    }
-
     componentDidMount() {
-
+        
+        //check for notifications on interval defined in global
         setInterval( () => {
+            //var obj = constructPacket()
+            //sendPacket(obj)
+        }, globals.notificationinterval)
 
-            //setting location
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    this.setState({loc: position.coords})
-                    console.log("-------FOUND POSITION--------")
-                    console.log(this.state.loc)
-                    console.log(`Longitude: ${this.state.loc.longitude}`)
+        
 
-                    globals.userLocation.lat = position.coords.latitude;
-                    globals.userLocation.long = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({loc: JSON.stringify(position)})
+                globals.userLocation.lat = position.coords.latitude;
+                globals.userLocation.long = position.coords.longitude; 
 
-                    //query friend locations
-
-                    if (globals.friendloc.length() > 0) {
-
-                        for (var friend in friendloc) {
-
-                            //query all friend locations 
-                            //this.constructpacket()
-                            //this.sendpacket(obj)
-
-                            //display on map   
-                            //globals.friendlocs[friend].lat = obj.position.lat
-                            //globals.friendlocs[friend].long = obj.position.long 
-                        }
-                      
-
-                        globals.userLocation.lat = position.coords.latitude;
-                        globals.userLocation.long = position.coords.longitude;
-
-                    }
-
-                    //set region
-
-                }, (error) => console.log(JSON.stringify(error)),
-                {enableHighAccuracy: false, timeout: 20000}
-            )
-        }, 1000)
-
-        ///this.watchID = navigator.geolocation.watchPosition((position) => {
-         //   var lastPosition = JSON.stringify(position);
-        //    this.setState({loc: lastPosition.coords});
-       // });
+                console.log(this.state.loc)
+            }, (error) => console.log(JSON.stringify(error)),
+            {enableHighAccuracy: true, timeout: 20000}
+        )
     }
 
     render() {

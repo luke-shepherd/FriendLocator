@@ -16,25 +16,29 @@ var construct = function(obj) {
 var send = function(obj, endpoint, action) {
 
     //DEBUG
-    action()
-    return true
+    //action()
+    //return true
     
     var url = endpoint
     let response = fetch(url, obj)
-        .then((response) => response.json())
-        .then((resonseJson) => {
-            console.log(responseJson)
+        //.then((response) => response.json())
+        .then((response) => {
+            
+            console.log('RESPONSE: ');
+            console.log(JSON.parse(response._bodyText));
 
             //parse response depending on 
             //var type = responseJson.type
-            var type = 'loginrtn'
+            //var type = responseJson.type
+            var type = 'login'
 
 
             switch(type) {
                 //NOTE: do not return true, just break
-                case 'loginrtn':
+                case 'login':
                     console.log('logging user in')
                     //parse and set global variables
+                    //globals.token = responseJson.token
                     //return false here if problem
                     break
                 case 'signuprtn':
@@ -60,7 +64,7 @@ var route = function(sceneId) {
 module.exports = {
 
     //server info
-    base_url: 'http://107.170.249.224:3000/',
+    base_url: 'http://107.170.249.224:8080/',
     token: '',
 
     //app user info
@@ -77,8 +81,8 @@ module.exports = {
     friend_replys :     [],
 
     userLocation: {
-        lat: '',
-        long: '',
+        latitude: '',
+        longitude: '',
     },
 
     firendlocs: {},

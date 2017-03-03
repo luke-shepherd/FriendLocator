@@ -60,12 +60,11 @@ export default class SignInPage extends Component {
 
         var type = this.state.toggle ? 'signup' : 'login'
         var obj = globals.constructPacket(
-            {type: type,
-             user: this.state.username,
+            {user: this.state.username,
              pass: this.state.password,})
 
         var url = globals.base_url
-        url = this.state.toggle ? url + 'signin' : url + 'registration'
+        url = this.state.toggle ? url + 'api/login/' : url + 'registration'
 
         //var onSuccess = () => {
         //    this.routeTo('MapPage')

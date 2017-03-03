@@ -60,12 +60,15 @@ export default class MapPage extends Component {
     componentDidMount() {
         
         //check for notifications on interval defined in global
+
+        /*
         setInterval( () => {
-            //var obj = constructPacket()
-            //sendPacket(obj)
+            var obj = globals.constructPacket(globals.userLocation);
+            var endpoint = globals.base_url + 'updateloc'
+            var success = globals.sendPacket(obj, endpoint, () => {console.log('sucess map')})
         }, globals.notificationinterval)
 
-        
+        */
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -85,12 +88,12 @@ export default class MapPage extends Component {
                 <View style={this.style.navbar}>
                     <NavBar/>
                 </View>
-                <MapView style={style.map}
+                <MapView style={this.style.map}
                     region={{
-                        latitude: globals.userLocation.lat,
-                        latitudeDelta: 0.001,
-                        longitude: globals.userLocation.long,
-                        longitudeDelta: 0.001
+                        latitude: 36, //globals.userLocation.lat,
+                        latitudeDelta: 10,
+                        longitude: -122, //globals.userLocation.long,
+                        longitudeDelta: 10
                 }} />
                 <View style={this.style.searchbar}>
                     <SearchBar/>

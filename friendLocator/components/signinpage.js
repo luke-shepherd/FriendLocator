@@ -74,8 +74,8 @@ export default class SignInPage extends Component {
         //var success = globals.sendPacket(obj, url, onSuccess)
         var success = globals.sendPacket(obj, url,
             () => {
-                globals.routeTo('MapPage')
                 globals.user = this.state.username
+                globals.routeTo('MapPage')
             })
 
     }

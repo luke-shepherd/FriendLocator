@@ -18,7 +18,12 @@ export default class MapPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loc: '',
+            region: {  
+                latitude: 36.97, //parseInt(globals.userLocation.latitude, 10),
+                latitudeDelta: 0.1,
+                longitude: -122.03, //parseInt(globals.userLocation.longitude, 10),
+                longitudeDelta: 0.1
+            },
 
             user: 'nouser',
         }
@@ -60,21 +65,32 @@ export default class MapPage extends Component {
     componentDidMount() {
         
         //check for notifications on interval defined in global
-
-        /*
+      
         setInterval( () => {
-            var obj = globals.constructPacket(globals.userLocation);
-            var endpoint = globals.base_url + 'updateloc'
-            var success = globals.sendPacket(obj, endpoint, () => {console.log('sucess map')})
+            if (globals.user != '') {
+                var obj = globals.constructPacket({user: globals.user,
+                                                   longitude: globals.userLocation.longitude,
+                                                   latitude: globals.userLocation.latitude});
+
+                var endpoint = globals.base_url + 'api/updateloc'
+                var success = globals.sendPacket(obj, endpoint, () => {console.log('success map')})
+            }
         }, globals.notificationinterval)
 
-        */
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({loc: JSON.stringify(position)})
-                globals.userLocation.lat = position.coords.latitude;
-                globals.userLocation.long = position.coords.longitude; 
+                globals.userLocation.latitude = position.coords.latitude;
+                globals.userLocation.longitude = position.coords.longitude;
+
+                this.setState({region: {  
+                                latitude: parseFloat(position.coords.latitude),
+                                latitudeDelta: 0.1,
+                                longitude: parseFloat(position.coords.longitude),
+                                longitudeDelta: 0.1,
+                               }}
+                );
 
                 console.log(this.state.loc)
             }, (error) => console.log(JSON.stringify(error)),
@@ -89,12 +105,9 @@ export default class MapPage extends Component {
                     <NavBar/>
                 </View>
                 <MapView style={this.style.map}
-                    region={{
-                        latitude: 36, //globals.userLocation.lat,
-                        latitudeDelta: 10,
-                        longitude: -122, //globals.userLocation.long,
-                        longitudeDelta: 10
-                }} />
+                    region={this.state.region}
+                    showsUserLocation={true}
+                    showsMyLocationButton={true}/>
                 <View style={this.style.searchbar}>
                     <SearchBar/>
                 </View>

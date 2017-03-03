@@ -46,15 +46,24 @@ var send = function(obj, endpoint, action) {
                         console.log('token:')
                         console.log(response.token)
                         globals.token = response.token
+                        console.log('Global Token: ');
+                        console.log(globals.token);
+
                     }
                     else {
                         console.log('log in fail:')
                         console.log(response.reason)
+                        return false
                     }
                     break
 
                 case 'registration':
                     console.log('signing user up')
+                    break
+
+                case 'updateloc':
+                    console.log('LOCATION RESPONSE:');
+                    console.log(response);
                     break
                 default:
                     console.log('Receive unknown type ERROR WILL ROBINSON');
@@ -106,6 +115,8 @@ module.exports = {
     sendPacket: send,
     constructPacket: construct,
     routeTo: route,
+    
+    notificationinterval: 2000,
 
 }
 

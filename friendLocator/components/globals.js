@@ -27,30 +27,12 @@ var send = function(obj, endpoint, action) {
             
             //console.log('TYPE IS: ' + JSON.parse(response._bodyText)["type"])
 
-            j = JSON.parse(response._bodyText)
-            console.log('RESPONSE: ');
-            console.log(j);
-
-            try {
-                console.log('trying 1')
-                console.log(j.type)
-            }
-            catch (e) {
-                console.log('1 didnt work')
-            }
-
-            try {
-                console.log('trying 2')
-                console.log(j['type'])
-            }
-            catch (e) {
-                console.log('2 didnt work')
-            }
+            response = JSON.parse(response._bodyText)
 
             //parse response depending on 
             //var type = responseJson.type
             //var type = responseJson.type
-            var type = 'login'
+            var type = response.type
 
             switch(type) {
                 //NOTE: do not return true, just break
@@ -59,8 +41,10 @@ var send = function(obj, endpoint, action) {
                     //parse and set global variables
                     //globals.token = responseJson.token
                     //return false here if problem
+                    console.log('token:')
+                    console.log(response.token)
                     break
-                case 'signuprtn':
+                case 'registration':
                     console.log('signing user up')
                     break
             }

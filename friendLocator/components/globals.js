@@ -37,13 +37,21 @@ var send = function(obj, endpoint, action) {
             switch(type) {
                 //NOTE: do not return true, just break
                 case 'login':
-                    console.log('logging user in')
-                    //parse and set global variables
-                    //globals.token = responseJson.token
-                    //return false here if problem
-                    console.log('token:')
-                    console.log(response.token)
+
+                    if (response.success) {
+                        console.log('logging user in')
+                        //parse and set global variables
+                        //globals.token = responseJson.token
+                        //return false here if problem
+                        console.log('token:')
+                        console.log(response.token)
+                    }
+                    else {
+                        console.log('log in fail:')
+                        console.log(response.reason)
+                    }
                     break
+
                 case 'registration':
                     console.log('signing user up')
                     break

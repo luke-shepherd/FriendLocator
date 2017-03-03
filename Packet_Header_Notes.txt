@@ -1,0 +1,93 @@
+        Sign-In/Login
+---------------------------------------------------------
+ENDPOINT: registration, login
+Sent:
+        user: 'username'
+        pass: 'password'
+Received:
+        token?: 'token'
+        success: bool
+        reason: 'reason'
+
+
+
+
+        Search Friend
+---------------------------------------------------------
+ENDPOINT: search
+Sent:
+        user: 'username'
+        query: 'query'
+Received:
+        success: bool
+        reason: 'reason'
+        results: ['result1', 'result2']
+
+
+
+
+        Location Update
+---------------------------------------------------------
+ENDPOINT: updateloc
+Sent:
+        user: 'username'
+        loc: {latitude: int
+              longitude: int
+              altitude: int
+             }
+Received:
+        success: bool
+        reason: 'reason'
+
+
+
+
+        Get Friends List
+---------------------------------------------------------
+ENDPOINT: getlist
+Sent:
+        user: 'username'
+Received:
+        success: bool
+        reason: 'reason'
+        friends: ['friend1', 'friend2']
+
+
+
+
+        Add/Delete Friends
+---------------------------------------------------------
+ENDPOINT: addfriend, delfriend
+Sent:
+        username: 'username'
+        friend: 'friendname'
+Received:
+        success: bool
+        reason: 'reason'
+
+
+
+
+        Request/Respond Location (friend)
+---------------------------------------------------------
+ENDPOINT: requestfriend, respondfriend
+Sent:
+        user: 'username'
+        friend: 'friend'
+Received:
+        success: bool
+        reason: 'reason'
+
+
+
+
+        Get Pending Friend Requests/Responses
+---------------------------------------------------------
+ENDPOINT: updateuser
+Sent:
+        user: 'username'
+Received:
+        success: bool
+        reason: 'reason'
+        requests: ['friend1', 'friend2']
+        responses: ['friend1], 'friend2']

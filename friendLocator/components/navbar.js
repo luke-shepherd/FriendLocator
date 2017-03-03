@@ -48,10 +48,6 @@ export default class NavBar extends Component {
         });
     }
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
     leftAction() {
         console.log('[+] navbar: left')
     }

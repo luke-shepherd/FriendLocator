@@ -13,6 +13,7 @@ globals = require('./globals')
 import SearchBar from './searchbar.js';
 import NavBar from './navbar.js';
 
+
 export default class TestPage extends Component {
     constructor(props) {
         super(props);
@@ -48,10 +49,6 @@ export default class TestPage extends Component {
                 bottom: 0
             },
         });
-    }
-
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
     }
 
     render() {

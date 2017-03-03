@@ -12,12 +12,14 @@ import MapView from 'react-native-maps';
 globals = require('./globals')
 import SearchBar from './searchbar.js';
 import NavBar from './navbar.js';
+import CustomMap from './CustomMap.js';
 
 export default class MapPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loc: 'nolocation',
+            loc: '',
+
             user: 'nouser',
         }
         this.style = StyleSheet.create({
@@ -54,48 +56,23 @@ export default class MapPage extends Component {
         });
     }
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
-    sendPacket(obj) {
-        var url = globals.base_url + 'update'
-        let response = fetch(url, obj)
-            .then((response) => response.json())
-            .then((resonseJson) => {
-                console.log(responseJson)
-                //read into json object and parse
-                if (false) return true
-                return false
-            })
-            .catch((error) => {
-                console.log(error)
-                return false
-            })
-    }
-
-    constructPacket() {
-        var obj = {
-            method: 'POST',
-            
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            
-            body: JSON.stringify({
-                type: 'locationUpdate',
-                user: this.state.user,
-                userLocation: this.state.loc,
-            })
-        }
-        return obj
-    }
 
     componentDidMount() {
+        
+        //check for notifications on interval defined in global
+        setInterval( () => {
+            //var obj = constructPacket()
+            //sendPacket(obj)
+        }, globals.notificationinterval)
+
+        
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({loc: JSON.stringify(position)})
+                globals.userLocation.lat = position.coords.latitude;
+                globals.userLocation.long = position.coords.longitude; 
+
                 console.log(this.state.loc)
             }, (error) => console.log(JSON.stringify(error)),
             {enableHighAccuracy: true, timeout: 20000}
@@ -108,15 +85,13 @@ export default class MapPage extends Component {
                 <View style={this.style.navbar}>
                     <NavBar/>
                 </View>
-                <MapView
-                    style={this.style.map}
-                    initialRegion={{
-                        latitude: 36.97,
-                        longitude: -122.0324,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-                />
+                <MapView style={style.map}
+                    region={{
+                        latitude: globals.userLocation.lat,
+                        latitudeDelta: 0.001,
+                        longitude: globals.userLocation.long,
+                        longitudeDelta: 0.001
+                }} />
                 <View style={this.style.searchbar}>
                     <SearchBar/>
                 </View>

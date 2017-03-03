@@ -49,89 +49,36 @@ export default class SignInPage extends Component {
         });
     }
 
-    routeTo(sceneId) {
-        this.props.nav.replace({id: sceneId});
-    }
-
-    sendPacket(obj) {
-        var url = globals.base_url
-        url = this.state.toggle ? url + 'signin' : url + 'registration'
-        let response = fetch(url, obj)
-            .then((response) => response.json())
-            .then((resonseJson) => {
-                console.log(responseJson)
-                //parse
-
-                /*
-                    body: {
-                        type: 'response',
-                        success: true,
-                        reason: 'could not find username'
-                    }
-                */
-                
-
-                //ROUTE HERE, ASYNC ISSUE
-
-                if (false) return true
-                return false
-            })
-            .catch((error) => {
-                console.log(error)
-                return false
-            })
-    }
-
-    constructPacket() {
-        var obj = {
-            method: 'POST',
-            
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            
-            body: JSON.stringify({
-                type: (this.state.toggle ? 'signup' : 'login'),
-                user: this.state.username,
-                pass: this.state.password,
-            })
-        }
-        return obj
-    }
-
     buttonAction = () => {
 
-        //DEBUG:
-        this.routeTo('MapPage')
-        return
+        //DEBUG
+        //this.routeTo('MapPage')
+        //return
 
         var text = this.state.toggle ? 'Logging in... ' : 'Signing up... '
         this.setState({actionText: text})
 
-        var obj = this.constructPacket()
-        var success = this.sendPacket(obj)
+        var type = this.state.toggle ? 'signup' : 'login'
+        var obj = globals.constructPacket(
+            {type: type,
+             user: this.state.username,
+             pass: this.state.password,})
 
-        if (success) {
-            globals.user = this.state.username
-            this.routeTo('MapPage')
-        }
+        var url = globals.base_url
+        url = this.state.toggle ? url + 'signin' : url + 'registration'
 
-        //DEBUG
-        //success = this.state.username == 'true' ? true: false
+        //var onSuccess = () => {
+        //    this.routeTo('MapPage')
+        //    globals.user = this.state.username
+        //}
 
-        //simulate sending packet and recieving response
-        /*
-        setTimeout( () => {
-            var result = success ? ' Success!': 'Failure.'
-            this.setState({actionText: this.state.actionText + result})
-            if (success) {
-                setTimeout( () => {
-                    this.routeTo('MapPage')
-                }, 1000)
-            }
-        }, 2000)
-        */
+        //var success = globals.sendPacket(obj, url, onSuccess)
+        var success = globals.sendPacket(obj, url,
+            () => {
+                globals.routeTo('MapPage')
+                globals.user = this.state.username
+            })
+
     }
 
     render() {

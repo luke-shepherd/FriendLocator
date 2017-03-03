@@ -27,7 +27,7 @@ var send = function(obj, endpoint, action) {
             
             //console.log('TYPE IS: ' + JSON.parse(response._bodyText)["type"])
 
-            j = JSON.parse(response._bodyText))
+            j = JSON.parse(response._bodyText)
             console.log('RESPONSE: ');
             console.log(j);
 

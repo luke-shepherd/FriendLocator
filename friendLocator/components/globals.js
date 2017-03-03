@@ -26,6 +26,9 @@ var send = function(obj, endpoint, action) {
             
             console.log('RESPONSE: ');
             console.log(JSON.parse(response._bodyText));
+            console.log('TYPE IS: ' + JSON.parse(response._bodyText)["type"])
+
+
 
             //parse response depending on 
             //var type = responseJson.type

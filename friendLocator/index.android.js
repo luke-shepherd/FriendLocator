@@ -31,7 +31,7 @@ export default class Main extends Component {
 
     render() {
         return (
-            <Navigato:
+            <Navigator
                 initialRoute={{id: 'SignInPage'}}
                 renderScene={this.renderScene.bind(this)}
             />

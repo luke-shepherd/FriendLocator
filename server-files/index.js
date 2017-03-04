@@ -12,6 +12,7 @@ const express = require('express'),
       WebSocket = require('ws');
       url = require('url');
       http = require('http');
+      //multer = require('multer');
 
 //MongoDB stuff
 mongoose.connect('mongodb://localhost:27017/test');
@@ -20,6 +21,8 @@ db.on('error', console.error.bind(console, 'connection error: '));
 db.once('open', function(){
 console.log(db);
 });
+// gfs
+//var gfs = Grid(db, mongoose);
 
 //Load User model from mongo.js
 var User = require('./mongo.js').User;
@@ -57,12 +60,12 @@ app.post('/registration', function(req, res){
       var newUser = new User({name : req.body.user, password: req.body.pass});
       newUser.save(function (err,obj,numAffected){
         if(err) return handleError(err);
-        res.json({"type": 'response',
+        res.json({"type": 'registration',
                   "success": true,});
         console.log('Number of lines affected: ', numAffected);
       });
     }else{
-      res.json({"type": 'response',
+      res.json({"type": 'registration',
                 "success": false,
                 "reason": 'User already exists'});
       console.log('User already exists');
@@ -76,25 +79,25 @@ var apiRoutes = express.Router();
 
 //Login route 
 apiRoutes.post('/login', function(req,res){
-   console.log("Received name: ", req.body.name);
-   console.log("Received password: ", req.body.password);
-   User.findOne({'name': req.body.name}, function(err,obj){
+   console.log("Received name: ", req.body.user);
+   console.log("Received password: ", req.body.pass);
+   User.findOne({'name': req.body.user}, function(err,obj){
      if(err) return handleError(err);
      console.log("Object received from query: ", obj);
      if(!obj){
-        res.json({"type": 'response',
+        res.json({"type": 'login',
                   "success": false,
                   "reason": 'User does not exist!'});
-     }else if(req.body.password !== obj.password){
-        res.json({"type": 'response',
+     }else if(req.body.pass !== obj.password){
+        res.json({"type": 'login',
                   "success": false,
                   "reason": 'Incorrect password'});
      }else{
          var token = jwt.sign(obj, app.get('superSecret'), {
-                expiresIn: 60*24 // expires in 24 hours
+                expiresIn: 60*180 // expires in 180 mins
          });
          obj.token = token;
-         res.json({"type": "response",
+         res.json({"type": "login",
                     "success": true,
                     "token" : token,
                     "reason": 'Correct username and password'});
@@ -125,13 +128,14 @@ apiRoutes.use(function(req, res, next){
     }
 });
 
-//Friend request route
-apiRoutes.post('/friendrequest/:username', function(req, res){
-   var requesting_user = req.body.name;
+//Add friend route from Packet Notes
+apiRoutes.post('/friendpage/add/', function(req, res){
+   var requesting_user = req.body.username;
+   var friend_requested = req.body.friend;
    console.log("Requesting user: ", requesting_user);  
-   console.log("Requesting friend for: ", req.params.username);   
+   console.log("Requesting friend for: ", friend_requested);   
 
-   User.findOneAndUpdate({'name': req.params.username,
+   User.findOneAndUpdate({'name': friend_requested,
 			  'friends_request': { $ne: requesting_user}},
 			   {$push: {friends_request: requesting_user}},
 			   {new: true}, function(err, obj){
@@ -144,23 +148,26 @@ apiRoutes.post('/friendrequest/:username', function(req, res){
       }else{
         console.log("Friends request array: ", obj.friends_request); 
         res.json({"type": 'response',
-                  "success": true});
+                  "success": true,
+                  "reason": 'Both friends exist and no errors reported'});
       }
    });
 
 });
 
+
+
 //Accept friend request route
-apiRoutes.post('/friendrequest/accept/:username', function(req, res){
+apiRoutes.post('/friendrequest/accept/', function(req, res){
    var requesting_user = req.body.name;
-   console.log("Requesting user: ", requesting_user);  
-   console.log("Requesting friend for: ", req.params.username);   
+   var accepting_friend = req.body.friend;
+   console.log("Requesting user for: ", requesting_user);  
+   console.log("Accepting friend for: ", accepting_friend);   
    
    //Update friends list of requesting user
    User.findOneAndUpdate({'name': requesting_user},
-               {$pull: {friends_request: req.params.username},
-			   {$push: {friends_list: req.params.username}},
-			   {new: true}, function(err, obj){
+    {$pull: {friends_request: accepting_friend}, $push: {friends_list: accepting_friend}},
+	{new: true}, function(err, obj){
       if(err) return handleError(err);
       
       if(obj == null){
@@ -168,41 +175,44 @@ apiRoutes.post('/friendrequest/accept/:username', function(req, res){
                    "success": false,
                    "reason": 'User does not exist'});
       }else{
-        console.log("Requesting user object: ", obj); 
+        console.log("This is updated user object: ", obj); 
         console.log("Friends request array: ", obj.friends_request); 
-      }
-   });
-   
-   //Update friends list of friend
-   User.findOneAndUpdate({'name': req.params.username},
+        //Update friends list of friend
+        User.findOneAndUpdate({'name': accepting_friend},
 			   {$push: {friends_list: requesting_user}},
 			   {new: true}, function(err, obj){
-      if(err) return handleError(err);
+            if(err) return handleError(err);
       
-      if(obj == null){
-         res.json({"type": 'response',
+            if(obj == null){
+                res.json({"type": 'response',
                    "success": false,
-                   "reason": 'User does not exist'});
-      }else{
-        console.log("Friend object: ", obj); 
-        console.log("Friends request array: ", obj.friends_request); 
-        res.json({"type": 'response',
-                  "success": true});
+                   "reason": 'Friend does not exist'});
+            }else{
+                console.log("This is updated Friend object: ", obj); 
+                console.log("Friends request array: ", obj.friends_request); 
+                res.json({"type": 'response',
+                  "success": true,
+                  "reason": 'Both friends exist'});
+            }
+        });
       }
    });
    
 });
 
 //Reject friend request route
-apiRoutes.post('/friendrequest/reject/:username', function(req, res){
+apiRoutes.post('/friendrequest/reject/', function(req, res){
    var requesting_user = req.body.name;
-   console.log("Requesting user: ", requesting_user);  
-   console.log("Requesting friend for: ", req.params.username);   
-
+   var rejecting_friend = req.body.friend;
+   var reject_notification = requesting_user + " has rejected your friend request";
+   console.log("Requesting user for: ", requesting_user);  
+   console.log("Rejecting friend for: ", rejecting_friend);      
+   console.log("Reject notification:", reject_notification);
+   
    //Update friends request of requesting user
     User.findOneAndUpdate({'name': requesting_user},
-               {$pull: {friends_request: req.params.username},
-			   {new: true}, function(err, obj){
+        {$pull: {friends_request: rejecting_friend}},
+	    {new: true}, function(err, obj){
       if(err) return handleError(err);
       
       if(obj == null){
@@ -212,84 +222,82 @@ apiRoutes.post('/friendrequest/reject/:username', function(req, res){
       }else{
         console.log("Requesting user object: ", obj); 
         console.log("Friends request array: ", obj.friends_request); 
-      }
-   });
-   
-   var reject_notification = requesting_user + "has rejected your friend request";
-   console.log("Reject notification:", reject_notifcation);
-   
-    //Update notifications list of friend
-   User.findOneAndUpdate({'name': req.params.username},
-			   {$push: {notifications: reject_notifcation}},
-			   {new: true}, function(err, obj){
-      if(err) return handleError(err);
+         //Update notifications list of friend
+        User.findOneAndUpdate({'name': rejecting_friend},
+			{$push: {friends_notifications: reject_notification}},
+			{new: true}, function(err, obj){
+            if(err) return handleError(err);
       
-      if(obj == null){
-         res.json({"type": 'response',
+            if(obj == null){
+                res.json({"type": 'response',
                    "success": false,
                    "reason": 'User does not exist'});
-      }else{
-        console.log("Friend object: ", obj); 
-        console.log("Notifications: ", obj.notifications); 
-        res.json({"type": 'response',
-                  "success": true});
+            }else{
+                console.log("Friend object: ", obj); 
+                console.log("Notifications: ", obj.friends_notifications); 
+                res.json({"type": 'response',
+                  "success": true,
+                  "reason": 'Both users exist'});
+            }
+        });
       }
    });
    
 });
 
 //Delete friend for both users route
-apiRoutes.post('/friendpage/delete/:username', function(req, res){
+apiRoutes.post('/friendpage/delete/', function(req, res){
     var requesting_user = req.body.name;
-    console.log("Requesting user: ", requesting_user);
-    console.log("Delete user: ", req.params.username);
+    var deleting_user = req.body.friend;
+    console.log("Requesting user for: ", requesting_user);
+    console.log("Delete user for: ", deleting_user);
     
     //Update friends list of requesting user
     User.findOneAndUpdate({'name':requesting_user},
-                            {$pull: {friends_list: req.params.username}},
-                            {new: true}, function(err, obj){
+        {$pull: {friends_list: deleting_user}},
+        {new: true}, function(err, obj){
           if(err) return handleError(err);
           
           if(obj == null){
-         res.json({"type": 'response',
+            res.json({"type": 'response',
                    "success": false,
                    "reason": 'User does not exist'});
-      }else{
-        console.log("Requesting user object: ", obj);
-        console.log("Friends list array: ", obj.friends_list); 
-      }
-   });
+          }else{
+            console.log("Requesting user object: ", obj);
+            console.log("Friends list array: ", obj.friends_list); 
+            //Update friends list of friend
+            User.findOneAndUpdate({'name': deleting_user},
+                {$pull: {friends_list: requesting_user}},
+                {new: true}, function(err, obj){
+                    if(err) return handleError(err);
+          
+                    if(obj == null){
+                        res.json({"type": 'response',
+                            "success": false,
+                            "reason": 'Deleting user does not exist'});
+                    }else{
+                        console.log("Friend object: ", obj); 
+                        console.log("Friends list array: ", obj.friends_list); 
+                        res.json({"type": 'response',
+                                  "success": true,
+                                  "reason": 'Both users exist'
+                        });      
+                    }   
+            });
+          }
+    });     
    
-   //Update friends list of friend
-   User.findOneAndUpdate({'name':req.params.username},
-                            {$pull: {friends_list: requesting_user}},
-                            {new: true}, function(err, obj){
-          if(err) return handleError(err);
-          
-          if(obj == null){
-         res.json({"type": 'response',
-                   "success": false,
-                   "reason": 'User does not exist'});
-      }else{
-         console.log("Friend object: ", obj); 
-        console.log("Friends list array: ", obj.friends_list); 
-        res.json({"type": 'response',
-                  "success": true});
-      }
-   });   
 
 });
 
-//General friend page route
-apiRoutes.post('/friendpage/', function(req, res){
-    var requesting_user = req.body.name;
+//Get Friends List route from Packet Notes
+apiRoutes.post('/friendpage/getlist/', function(req, res){
+    var requesting_user = req.body.user;
     console.log("Requesting user: ", requesting_user);
     
-    User.findOne({'name': req.body.name}, function(err,obj){
-        if(err) return handleError(err);
-    
-        console.log("Object received from query: ", obj);
-    
+    User.findOne({'name': requesting_user}, function(err,obj){
+        if(err) return handleError(err);  
+        console.log("User object received from query: ", obj);
         if(obj == null){
             res.json({"type": 'response',
                 "success": false,
@@ -297,8 +305,30 @@ apiRoutes.post('/friendpage/', function(req, res){
         }else{ 
             res.json({"type": 'response',
                 "success": true,
-                "friends_request": obj.friends_request,
+                "reason": 'Requesting username exists',
                 "friends": obj.friends_list});
+        }
+    }); 
+    
+});
+
+//Update user route from Packet Notes
+apiRoutes.post('/updateuser/', function(req, res){
+    var requesting_user = req.body.user;
+    console.log("Requesting user: ", requesting_user);
+    
+    User.findOne({'name': requesting_user}, function(err,obj){
+        if(err) return handleError(err);    
+        console.log("User object received from query: ", obj);
+        if(obj == null){
+            res.json({"type": 'response',
+                "success": false,
+                "reason": 'Error: User does not exist'});
+        }else{ 
+            res.json({"type": 'response',
+                "success": true,
+                "reason": 'Requesting user exists',
+                "requests": obj.friends_request});
         }
     }); 
     
@@ -333,7 +363,7 @@ apiRoutes.post('/grouppage/create/:name', function(req, res){
     var requesting_user = req.body.name;
     console.log("Requesting user: ", requesting_user);
     
-    User.findOneAndUpdate({'name': req.params.username,
+    User.findOneAndUpdate({'name': req.params.username},
 			   {$push: {groups: req.params.name}},
 			   {new: true}, function(err, obj){
       if(err) return handleError(err);
@@ -351,6 +381,34 @@ apiRoutes.post('/grouppage/create/:name', function(req, res){
  
 });
 
+//Location update from Packet Notes
+apiRoutes.post('/updateloc/', function(req, res){
+    var requesting_user = req.body.user;
+    var updated_longitude = req.body.longitude;
+    var updated_latitude = req.body.latitude;
+    console.log("Requesting user: ", requesting_user);
+    console.log("Updated longitude: ", updated_longitude);
+    console.log("Updated latitude: ", updated_latitude);
+    
+    User.findOneAndUpdate({'name':requesting_user},
+                            {$pushAll: {"location.coordinates": [updated_longitude, updated_latitude]}},
+                            {new: true}, function(err, obj){
+        if(err) return handleError(err);
+          
+        if(obj == null){
+         res.json({"type": 'updateloc',
+                   "success": false,
+                   "reason": 'User does not exist'});
+        }else{
+        console.log("This is object: ", obj.location);
+        res.json({"type": 'updateloc',
+                  "success": true,
+                  "reason": 'User exists and no errors reported'});
+        }
+   });   
+    
+});
+
 //Delete group route
 
 //Add friends to a group route
@@ -360,6 +418,36 @@ apiRoutes.post('/grouppage/create/:name', function(req, res){
 //Send location to people in group route
 
 //Upload profile pic route
+/*
+app.post('/fs/upload', multer({
+    upload: null,
+    onFileUploadStart: function (file) {
+        // Set upload with WritableStream
+        this.upload = gfs.createWriteStream({
+            filename: file.originalname,
+            mode: "w",
+            chunkSize: 1024*4,
+            content_type: file.mimitype,
+            root: "fs"
+        });
+    },
+    onFileUploadData: function (file, data) {
+        // Put the chunks into the DB
+        this.upload.write(data)
+    },
+    onFileUploadComplete: function (file) {
+        // End the process
+        this.upload.end();
+    }
+}), function (req, res) {
+    res.sendStatus(200);
+});
+// Test the profile pic route
+app.route('/fs/download/:file').get(function(req, res) {
+    var readstream = gfs.createReadStream({_id: req.params.file});
+    readstream.pipe(res);
+});
+*/
 
 
 app.use('/api', apiRoutes);

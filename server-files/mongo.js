@@ -2,6 +2,7 @@
 */
 
 var mongoose = require('mongoose');
+//var GeoJson = require('mongoose-geojson-schema');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
@@ -10,9 +11,14 @@ var userSchema = new Schema({
   token: String,
   friends_list: [String],
   friends_request: [String],
+  friends_notifications: [String],
+  friends_pending: [String],
   location: {
+   type: {
      type: String,
-     coordinates:{longitude: Number, latitude: Number}
+     default: 'Point'
+   },
+   coordinates: [Number]
   }
 });
 

@@ -488,7 +488,7 @@ apiRoutes.post('/userQuery', function (req, res) {
 
 
 apiRoutes.post('/search', function(req,res){
-  var requesting_user = req.body.name;
+  var requesting_user = req.body.user;
   console.log("Requesting user:", requesting_user);
 
   User.findOne({'name':req.body.name}, function(err,obj){

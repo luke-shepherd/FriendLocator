@@ -189,7 +189,7 @@ apiRoutes.post('/acceptFriend/', function(req, res){
         console.log("Friends request array: ", obj.friends_request); 
         //Update friends list of friend
         User.findOneAndUpdate({'name': accepting_friend},
-			   {$pull: {friends_pending: requesting_user} ,$push: {friends_list: requesting_user}, $push: {friends_notifications: accept_notification}},
+			   {$pull: {friends_pending: requesting_user} ,$push: {friends_list: requesting_user, friends_notifications: accept_notification}},
 			   {new: true}, function(err, obj){
             if(err) return handleError(err);
       
@@ -481,7 +481,7 @@ apiRoutes.post('/userQuery', function (req, res) {
                       "name": true,
                       "success": true,
                       "friends_list": obj.friends_list,
-                      "reason": 'A valid user was provided'});
+                      "reason": 'A valid username was provided'});
         }
     });
 });

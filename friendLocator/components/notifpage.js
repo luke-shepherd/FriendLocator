@@ -20,7 +20,7 @@ export default class NotifPage extends Component {
             {rowHasChanged: (r1,r2) => r1 !== r2}
         )
         this.state = {
-            data: globals.notifications,
+            data: ['friend request!', 'friend removed :/'], //globals.notifications,
             ntext: 'no notifications :('
         }
 
@@ -37,7 +37,7 @@ export default class NotifPage extends Component {
             row: {
                 flex: 1,
                 flexDirection: 'row',
-                justifyContent: 'center',
+                justifyContent: 'space-between',
                 alignItems: 'center',
             },
             rowtext: {
@@ -94,9 +94,6 @@ export default class NotifPage extends Component {
                 () => {
                     console.log('[+] sucess declined friend: ' + notif)
                 })
-
-
-
         }
         else {
             //remove notification from global variable
@@ -120,8 +117,6 @@ export default class NotifPage extends Component {
                     console.log('[+] success accepted friend: ' + notif)
                     globals.friendslist.append(notif)
                 })
-
-
         }
     }
 

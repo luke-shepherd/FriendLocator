@@ -159,7 +159,7 @@ module.exports = {
     constructPacket:    construct,
     routeTo:            route,
     
-    notificationinterval: 200000,
-    locationinterval: 2000, 
+    notificationinterval: 2000,
+    locationinterval: 200000, 
 }
 

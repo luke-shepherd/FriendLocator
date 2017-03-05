@@ -130,7 +130,7 @@ apiRoutes.use(function(req, res, next){
 
 //Add friend route from Packet Notes
 apiRoutes.post('/addFriend/', function(req, res){
-   var requesting_user = req.body.username;
+   var requesting_user = req.body.user;
    var friend_requested = req.body.friend;
    console.log("Requesting user: ", requesting_user);  
    console.log("Requesting friend for: ", friend_requested);   
@@ -167,7 +167,7 @@ apiRoutes.post('/addFriend/', function(req, res){
 
 //Accept friend request route
 apiRoutes.post('/acceptFriend/', function(req, res){    
-   var requesting_user = req.body.name;
+   var requesting_user = req.body.user;
    var accepting_friend = req.body.friend;
    var accept_notification = requesting_user + " has accepted your friend request";
    console.log("Requesting user for: ", requesting_user);  
@@ -213,7 +213,7 @@ apiRoutes.post('/acceptFriend/', function(req, res){
 
 //Reject friend request route
 apiRoutes.post('/rejectFriend/', function(req, res){
-   var requesting_user = req.body.name;
+   var requesting_user = req.body.user;
    var rejecting_friend = req.body.friend;
    var reject_notification = requesting_user + " has rejected your friend request";
    console.log("Requesting user for: ", requesting_user);  
@@ -260,7 +260,7 @@ apiRoutes.post('/rejectFriend/', function(req, res){
 
 //Delete friend for both users route
 apiRoutes.post('/deleteFriend/', function(req, res){
-    var requesting_user = req.body.name;
+    var requesting_user = req.body.user;
     var deleting_user = req.body.friend;
     console.log("Requesting user for: ", requesting_user);
     console.log("Delete user for: ", deleting_user);
@@ -481,36 +481,9 @@ apiRoutes.post('/userQuery', function (req, res) {
                       "name": true,
                       "success": true,
                       "friends_list": obj.friends_list,
-                      "reason": 'A valid username was provided'});
+                      "reason": 'A valid user was provided'});
         }
     });
-});
-
-
-apiRoutes.post('/search', function(req,res){
-  var requesting_user = req.body.user;
-  console.log("Requesting user:", requesting_user);
-
-  User.findOne({'name':req.body.name}, function(err,obj){
-    if (err) return handleError(err);
-
-    console.log("Object received from query: ", obj);
-
-    if(obj==null){
-      res.json({"type": 'search',
-                "success": false,
-                "reason": 'Error: User does not exist'});
-    }else{
-      console.log("Object received from query: ",obj);
-      var user_friendList = obj.friends_list;
-
-
-      res.json({"type": 'search',
-                "success": true,
-                "users": ["ted cruz", "jimmy page", "frogman"]})
-
-    }
-  });
 });
 
 

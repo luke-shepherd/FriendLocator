@@ -488,6 +488,7 @@ apiRoutes.post('/userQuery', function (req, res) {
 
 apiRoutes.post('/search', function(req,res){
   var requesting_user = req.body.user;
+  var lookup          = req.body.lookup;
   console.log("Requesting user:", requesting_user);
 
   User.findOne({'name':req.body.name}, function(err,obj){
@@ -506,7 +507,7 @@ apiRoutes.post('/search', function(req,res){
 
       res.json({"type": 'search',
                 "success": true,
-                "users": ["ted cruz", "jimmy page", "frogman"]})
+                "results": ["ted cruz", "jimmy page", "frogman"]})
 
     }
   });

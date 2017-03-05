@@ -20,7 +20,8 @@ export default class NotifPage extends Component {
             {rowHasChanged: (r1,r2) => r1 !== r2}
         )
         this.state = {
-            data: globals.notifications
+            data: globals.notifications,
+            ntext: 'no notifications :('
         }
 
         this.style = StyleSheet.create({
@@ -29,6 +30,9 @@ export default class NotifPage extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',
+            },
+            listcontainer: {
+                top: 60,
             },
             row: {
                 flex: 1,
@@ -47,6 +51,12 @@ export default class NotifPage extends Component {
                 top: 0,
                 left: 0,
                 right: 0,
+            },
+            ntext: {
+                position: 'absolute',
+                top: 300,
+                left: 100,
+                fontSize: 50,
             },
         });
     }
@@ -121,33 +131,37 @@ export default class NotifPage extends Component {
                 <View style={this.style.navbar}>
                     <NavBar/>
                 </View>
-                <ListView
-                    dataSource={this.ds.cloneWithRows(this.state.data)}
-                    renderRow={(row) => 
-                        <View style={this.style.row}>
-                        <TouchableHighlight 
-                            onPress={() => this.highlightAction(row)}
-                            underlayColor='#dcdcdc'
-                        >
-                        <Text style={this.style.rowtext}>
-                            {row}
-                        </Text>
-                        </TouchableHighlight>
-                        <Button
-                            onPress={() => this.buttonAction(row, 'accept')}
-                            title={'accept'}
-                            color='#841584'
-                        />
-                        <Button
-                            onPress={() => this.buttonAction(row, 'decline')}
-                            title={'decline'}
-                            color='#841584'
-                        />
-                        </View>
-                    }
-                    enableEmptySections={true}
-                />
-
+                <View style={this.style.listcontainer}>
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(this.state.data)}
+                        renderRow={(row) => 
+                            <View style={this.style.row}>
+                            <TouchableHighlight 
+                                onPress={() => this.highlightAction(row)}
+                                underlayColor='#dcdcdc'
+                            >
+                            <Text style={this.style.rowtext}>
+                                {row}
+                            </Text>
+                            </TouchableHighlight>
+                            <Button
+                                onPress={() => this.buttonAction(row, 'accept')}
+                                title={'accept'}
+                                color='#841584'
+                            />
+                            <Button
+                                onPress={() => this.buttonAction(row, 'decline')}
+                                title={'decline'}
+                                color='#841584'
+                            />
+                            </View>
+                        }
+                        enableEmptySections={true}
+                    />
+                </View>
+                <Text style={this.style.ntext}>
+                    {this.state.data.length == 0 ? this.state.ntext : ''}
+                </Text>
             </View>
         );
     }

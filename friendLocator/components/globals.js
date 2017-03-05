@@ -111,6 +111,8 @@ var send = function(obj, endpoint, action) {
 
                 default:
                     console.log('Receive unknown type ERROR WILL ROBINSON');
+                    console.log('This is what I did get')
+                    console.log(response)
                     break
 
             }

@@ -32,7 +32,7 @@ export default class Main extends Component {
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'SignInPage'}}
+                initialRoute={{id: 'NotifPage'}}
                 renderScene={this.renderScene.bind(this)}
             />
         );

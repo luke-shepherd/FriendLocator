@@ -6,7 +6,7 @@ var construct = function(obj) {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'x-access-token': globals.token,
+            'x-access-token': module.exports.token,
         },
         
         body: JSON.stringify(obj)
@@ -57,6 +57,18 @@ var send = function(obj, endpoint, action) {
                     }
                     break
 
+                case 'updateUser':
+                    if (response.success) {
+                        console.log(response.notifications)
+                        module.exports.notifications = response.notifications;
+                    }
+                    else {
+                        console.log('update failed')
+                        console.log(response.reason)
+                        return false
+                    }
+                    break
+
                 case 'registration':
                     console.log('signing user up')
                     break
@@ -65,6 +77,23 @@ var send = function(obj, endpoint, action) {
                     console.log('LOCATION RESPONSE:');
                     console.log(response);
                     break
+                
+                case 'acceptFriend':
+                    console.log('[*] accept friend:');
+                    if (!response.success) {
+                        console.log(response.reason);
+                        return false
+                    }
+                    break
+
+                case 'declineFriend':
+                    if (!response.success) {
+                        console.log(response.reason);
+                        return false
+                    }
+                    console.log('[*] decline friend:');
+                    break
+
                 default:
                     console.log('Receive unknown type ERROR WILL ROBINSON');
                     break
@@ -88,33 +117,31 @@ var route = function(sceneId) {
 module.exports = {
 
     //server info
-    base_url: 'http://107.170.249.224:8080/',
-    token: '',
+    base_url:   'http://107.170.249.224:8080/',
+    token:      '',
 
     //app user info
     user:           '',
     friendslist:    [],
 
     //name of user to display on profile page
-    userpage:           '',
+    userpage:   '',
 
     //pending info, should notify user if anything here
-    loc_requests:       [],
-    loc_replys:         [],
-    friend_requests :   [],
-    friend_replys :     [],
+    notifications:  [],
 
     userLocation: {
-        latitude: '',
-        longitude: '',
+        latitude:   '',
+        longitude:  '',
     },
 
-    firendlocs: {},
+    friendlocs: {},
 
-    nav: '',
-    sendPacket: send,
-    constructPacket: construct,
-    routeTo: route,
+    //objects and methods
+    nav:                '',
+    sendPacket:         send,
+    constructPacket:    construct,
+    routeTo:            route,
     
     notificationinterval: 2000,
 

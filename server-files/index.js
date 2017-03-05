@@ -326,7 +326,7 @@ apiRoutes.post('/friendpage/getlist/', function(req, res){
 });
 
 //Update user route from Packet Notes
-apiRoutes.post('/updateuser/', function(req, res){
+apiRoutes.post('/updateUser/', function(req, res){
     var requesting_user = req.body.user;
     console.log("Requesting user: ", requesting_user);
     
@@ -334,14 +334,14 @@ apiRoutes.post('/updateuser/', function(req, res){
         if(err) return handleError(err);    
         console.log("User object received from query: ", obj);
         if(obj == null){
-            res.json({"type": 'updateuser',
+            res.json({"type": 'updateUser',
                 "success": false,
                 "reason": 'Error: User does not exist'});
         }else{ 
-            res.json({"type": 'updateuser',
+            res.json({"type": 'updateUser',
                 "success": true,
                 "reason": 'Requesting user exists',
-                "requests": obj.friends_request});
+                "notifications": obj.friends_notifications});
         }
     }); 
     

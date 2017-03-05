@@ -478,9 +478,10 @@ apiRoutes.post('/userQuery', function (req, res) {
         }
         else {
             res.json({"type": 'userQuery',
-                     "success": true,
-                     "friends_list": obj.friends_list,
-                     "reason": 'A valid user was provided'});
+                      "name": true,
+                      "success": true,
+                      "friends_list": obj.friends_list,
+                      "reason": 'A valid user was provided'});
         }
     });
 });

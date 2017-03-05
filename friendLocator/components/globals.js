@@ -98,6 +98,17 @@ var send = function(obj, endpoint, action) {
                     console.log('[*] decline friend:');
                     break
 
+                case 'search':
+                    if (response.success) {
+                        console.log(response.results);
+                        module.exports.searchresults = response.results
+                    }
+                    else {
+                        console.log(response.reason);
+                        return false
+                    }
+                    break
+
                 default:
                     console.log('Receive unknown type ERROR WILL ROBINSON');
                     break
@@ -133,6 +144,7 @@ module.exports = {
 
     //pending info, should notify user if anything here
     notifications:  [],
+    searchresults: [],
 
     userLocation: {
         latitude:   '',

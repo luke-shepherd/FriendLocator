@@ -46,23 +46,24 @@ export default class SearchBar extends Component {
     onTextUpdate(query) {
         this.setState({text: query})
         
-        /*
-            send request to server, parse response
-        */
-
-        //var obj = this.constructPacket(query)
-        //var success = this.sendPacket(obj)
-        var success = true
+        var url = globals.base_url + 'api/search'
+        var obj = globals.constructPacket({
+            user: globals.user,
+            lookup: query,})
+        var success = globals.sendPacket(obj, url,
+            () => {
+                console.log('[*] search success')
+            })
 
         if (!success) {
             this.setState({results: ['no results']})
         } 
-
-        //DEBUG
         else {
-            var temp = this.state.results
-            temp.push(query)
-            this.setState({results: temp})
+            this.setState({results: globals.searchresults})
+            //add to list
+            //var temp = this.state.results
+            //temp.push(query)
+            //this.setState({results: temp})
         }
     }
     

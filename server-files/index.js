@@ -487,6 +487,33 @@ apiRoutes.post('/userQuery', function (req, res) {
 });
 
 
+apiRoutes.get('/search', function(req,res){
+  var requesting_user = req.body.name;
+  console.log("Requesting user:", requesting_user);
+
+  User.findOne({'name':req.body.name}, function(err,obj){
+    if (err) return handleError(err);
+
+    console.log("Object received from query: ", obj);
+
+    if(obj==null){
+      res.json({"type": 'search',
+                "success": false,
+                "reason": 'Error: User does not exist'});
+    }else{
+      console.log("Object received from query: ",obj);
+      var user_friendList = obj.friends_list;
+
+
+      res.json({"type": 'search'
+                "success": true,
+                "users": obj.friends_list})
+
+    }
+  });
+});
+
+
 app.use('/api', apiRoutes);
 
 

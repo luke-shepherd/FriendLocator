@@ -20,7 +20,7 @@ export default class NotifPage extends Component {
             {rowHasChanged: (r1,r2) => r1 !== r2}
         )
         this.state = {
-            data: ['friend request!', 'friend removed :/'], //globals.notifications,
+            data: globals.notifications,
             ntext: 'no notifications :('
         }
 
@@ -63,12 +63,17 @@ export default class NotifPage extends Component {
 
     componentDidMount() {
         //get notifications from server
-        var url = globals.base_url + 'api/updateuser'
-        var obj = globals.constructPacket({user: globals.user})
-        var success = globals.sendPacket(obj, url, 
-            () => {
-                console.log('[+] update success from notif page')
-            })
+        setInterval( () => {
+            var url = globals.base_url + 'api/updateUser'
+            var obj = globals.constructPacket({user: globals.user})
+            var success = globals.sendPacket(obj, url, 
+                () => {
+                    console.log('[+] update success from notif page')
+                })
+
+                this.setState({data: globals.notifications})
+        },globals.notificationinterval)
+
     }
 
     highlightAction(notif) {

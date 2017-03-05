@@ -54,6 +54,7 @@ export default class NavBar extends Component {
 
     rightAction() {
         console.log('[+] navbar: right')
+        globals.routeTo('NotifPage')
     }
 
     render() {

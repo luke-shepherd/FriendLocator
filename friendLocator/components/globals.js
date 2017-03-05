@@ -60,7 +60,11 @@ var send = function(obj, endpoint, action) {
                 case 'updateUser':
                     if (response.success) {
                         console.log(response.notifications)
+
+                        console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
                         module.exports.notifications = response.notifications;
+                        console.log('RECIEVED NOTIFICATIONS: ' + module.exports.notifications);
+ 
                     }
                     else {
                         console.log('update failed')
@@ -143,7 +147,7 @@ module.exports = {
     constructPacket:    construct,
     routeTo:            route,
     
-    notificationinterval: 2000,
-
+    notificationinterval: 200000,
+    locationinterval: 2000, 
 }
 

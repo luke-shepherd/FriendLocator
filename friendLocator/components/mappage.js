@@ -75,7 +75,7 @@ export default class MapPage extends Component {
                 var endpoint = globals.base_url + 'api/updateloc'
                 var success = globals.sendPacket(obj, endpoint, () => {console.log('success map')})
             }
-        }, globals.notificationinterval)
+        }, globals.locationinterval)
 
 
         navigator.geolocation.getCurrentPosition(

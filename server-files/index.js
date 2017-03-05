@@ -129,7 +129,7 @@ apiRoutes.use(function(req, res, next){
 });
 
 //Add friend route from Packet Notes
-apiRoutes.post('/friendpage/add/', function(req, res){
+apiRoutes.post('/addFriend/', function(req, res){
    var requesting_user = req.body.username;
    var friend_requested = req.body.friend;
    console.log("Requesting user: ", requesting_user);  
@@ -142,25 +142,34 @@ apiRoutes.post('/friendpage/add/', function(req, res){
       if(err) return handleError(err);
       
       if(obj == null){
-         res.json({"type": 'response',
+         res.json({"type": 'addFriend',
                    "success": false,
                    "reason": 'User does not exist'});
       }else{
+        console.log("Querying user: ", friend_requested);
         console.log("Friends request array: ", obj.friends_request); 
-        res.json({"type": 'response',
+        User.findOneAndUpdate({'name': requesting_user},
+                              {$push: {friends_pending: friend_requested}},
+                              {new: true}, function(err, obj){
+                if(err) return handleError(err);         
+                console.log("Querying user: ", requesting_user);
+                console.log("This is pendings array for: ", obj.friends_pending);
+                res.json({"type": 'addFriend',
                   "success": true,
                   "reason": 'Both friends exist and no errors reported'});
+        });      
       }
    });
 
 });
-
+    
 
 
 //Accept friend request route
-apiRoutes.post('/friendrequest/accept/', function(req, res){
+apiRoutes.post('/acceptFriend/', function(req, res){    
    var requesting_user = req.body.name;
    var accepting_friend = req.body.friend;
+   var accept_notification = requesting_user + " has accepted your friend request";
    console.log("Requesting user for: ", requesting_user);  
    console.log("Accepting friend for: ", accepting_friend);   
    
@@ -171,26 +180,28 @@ apiRoutes.post('/friendrequest/accept/', function(req, res){
       if(err) return handleError(err);
       
       if(obj == null){
-         res.json({"type": 'response',
+         res.json({"type": 'acceptFriend',
                    "success": false,
                    "reason": 'User does not exist'});
       }else{
+        console.log("Querying user: ", requesting_user);
         console.log("This is updated user object: ", obj); 
         console.log("Friends request array: ", obj.friends_request); 
         //Update friends list of friend
         User.findOneAndUpdate({'name': accepting_friend},
-			   {$push: {friends_list: requesting_user}},
+			   {$pull: {friends_pending: requesting_user} ,$push: {friends_list: requesting_user}, $push: {friends_notifications: accept_notification}},
 			   {new: true}, function(err, obj){
             if(err) return handleError(err);
       
             if(obj == null){
-                res.json({"type": 'response',
+                res.json({"type": 'acceptFriend',
                    "success": false,
                    "reason": 'Friend does not exist'});
             }else{
+                console.log("Querying user: ", accepting_friend);
                 console.log("This is updated Friend object: ", obj); 
                 console.log("Friends request array: ", obj.friends_request); 
-                res.json({"type": 'response',
+                res.json({"type": 'acceptFriend',
                   "success": true,
                   "reason": 'Both friends exist'});
             }
@@ -201,7 +212,7 @@ apiRoutes.post('/friendrequest/accept/', function(req, res){
 });
 
 //Reject friend request route
-apiRoutes.post('/friendrequest/reject/', function(req, res){
+apiRoutes.post('/rejectFriend/', function(req, res){
    var requesting_user = req.body.name;
    var rejecting_friend = req.body.friend;
    var reject_notification = requesting_user + " has rejected your friend request";
@@ -216,26 +227,28 @@ apiRoutes.post('/friendrequest/reject/', function(req, res){
       if(err) return handleError(err);
       
       if(obj == null){
-         res.json({"type": 'response',
+         res.json({"type": 'rejectFriend',
                    "success": false,
                    "reason": 'User does not exist'});
       }else{
+        console.log("Querying user: ", requesting_user);
         console.log("Requesting user object: ", obj); 
         console.log("Friends request array: ", obj.friends_request); 
          //Update notifications list of friend
         User.findOneAndUpdate({'name': rejecting_friend},
-			{$push: {friends_notifications: reject_notification}},
+			{$pull: {friends_pending: requesting_user}, $push: {friends_notifications: reject_notification}},
 			{new: true}, function(err, obj){
             if(err) return handleError(err);
       
             if(obj == null){
-                res.json({"type": 'response',
+                res.json({"type": 'rejectFriend',
                    "success": false,
                    "reason": 'User does not exist'});
             }else{
+                console.log("Querying user: ", rejecting_friend);
                 console.log("Friend object: ", obj); 
                 console.log("Notifications: ", obj.friends_notifications); 
-                res.json({"type": 'response',
+                res.json({"type": 'rejectFriend',
                   "success": true,
                   "reason": 'Both users exist'});
             }
@@ -246,7 +259,7 @@ apiRoutes.post('/friendrequest/reject/', function(req, res){
 });
 
 //Delete friend for both users route
-apiRoutes.post('/friendpage/delete/', function(req, res){
+apiRoutes.post('/deleteFriend/', function(req, res){
     var requesting_user = req.body.name;
     var deleting_user = req.body.friend;
     console.log("Requesting user for: ", requesting_user);
@@ -259,7 +272,7 @@ apiRoutes.post('/friendpage/delete/', function(req, res){
           if(err) return handleError(err);
           
           if(obj == null){
-            res.json({"type": 'response',
+            res.json({"type": 'deleteFriend',
                    "success": false,
                    "reason": 'User does not exist'});
           }else{
@@ -272,13 +285,13 @@ apiRoutes.post('/friendpage/delete/', function(req, res){
                     if(err) return handleError(err);
           
                     if(obj == null){
-                        res.json({"type": 'response',
+                        res.json({"type": 'deleteFriend',
                             "success": false,
                             "reason": 'Deleting user does not exist'});
                     }else{
                         console.log("Friend object: ", obj); 
                         console.log("Friends list array: ", obj.friends_list); 
-                        res.json({"type": 'response',
+                        res.json({"type": 'deleteFriend',
                                   "success": true,
                                   "reason": 'Both users exist'
                         });      
@@ -321,11 +334,11 @@ apiRoutes.post('/updateuser/', function(req, res){
         if(err) return handleError(err);    
         console.log("User object received from query: ", obj);
         if(obj == null){
-            res.json({"type": 'response',
+            res.json({"type": 'updateuser',
                 "success": false,
                 "reason": 'Error: User does not exist'});
         }else{ 
-            res.json({"type": 'response',
+            res.json({"type": 'updateuser',
                 "success": true,
                 "reason": 'Requesting user exists',
                 "requests": obj.friends_request});
@@ -448,6 +461,29 @@ app.route('/fs/download/:file').get(function(req, res) {
     readstream.pipe(res);
 });
 */
+
+// Query a user's info
+apiRoutes.post('/userQuery', function (req, res) {
+    console.log("Received name: ", req.body.user);
+    console.log("Received password: ", req.body.pass);
+    User.findOne({'name': req.body.user}, function(err, obj) {
+        if(err) {
+            return handleError(err);
+        }
+        console.log("The following object was received from the query: ", obj);
+        if (!obj) {
+            res.json({"type": 'userQuery',
+                      "success": false,
+                      "reason": 'The user does not exist!'});
+        }
+        else {
+            res.json({"type": 'userQuery',
+                     "success": true,
+                     "friends_list": obj.friends_list,
+                     "reason": 'A valid user was provided'});
+        }
+    });
+});
 
 
 app.use('/api', apiRoutes);

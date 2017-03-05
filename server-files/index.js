@@ -487,7 +487,7 @@ apiRoutes.post('/userQuery', function (req, res) {
 });
 
 
-apiRoutes.get('/search', function(req,res){
+apiRoutes.post('/search', function(req,res){
   var requesting_user = req.body.name;
   console.log("Requesting user:", requesting_user);
 
@@ -505,9 +505,9 @@ apiRoutes.get('/search', function(req,res){
       var user_friendList = obj.friends_list;
 
 
-      res.json({"type": 'search'
+      res.json({"type": 'search',
                 "success": true,
-                "users": obj.friends_list})
+                "users": ["ted cruz", "jimmy page", "frogman"]})
 
     }
   });

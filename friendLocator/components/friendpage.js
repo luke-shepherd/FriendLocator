@@ -5,9 +5,11 @@ import {
         Text,
         View,
         Navigator,
-        Button
+        Button,
+
 } from 'react-native';
 
+import NavBar from './navbar.js';
 globals = require('./globals')
 
 export default class FriendPage extends Component {
@@ -25,6 +27,12 @@ export default class FriendPage extends Component {
                 fontSize: 20,
                 textAlign: 'center',
                 margin: 10,
+            },
+            navbar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
             },
         });
     }

@@ -32,7 +32,7 @@ export default class Main extends Component {
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'MapPage'}}
+                initialRoute={{id: 'UserPage'}}
                 renderScene={this.renderScene.bind(this)}
             />
         );

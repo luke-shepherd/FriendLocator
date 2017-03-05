@@ -5,10 +5,13 @@ import {
         Text,
         View,
         Navigator,
-        Button
+        Button,
+        Image,
 } from 'react-native';
 
+import NavBar from './navbar.js';
 globals = require('./globals')
+
 
 export default class UserPage extends Component {
     
@@ -26,6 +29,19 @@ export default class UserPage extends Component {
                 textAlign: 'center',
                 margin: 10,
             },
+            navbar: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+            },
+            circle: {
+ 				height: 100,
+  				width: 100,
+  				borderRadius: 30,
+  				backgroundColor: '#F5FCFF',
+			},
+
         });
     }
 
@@ -60,22 +76,34 @@ export default class UserPage extends Component {
         this.props.nav.replace({id: sceneId});
     }
 
+    renderSend = function() {
+    	return (
+    		<Button
+            	onPress={this.buttonActionSend}
+                title={'Send Location'}
+                color='#841584'
+            />)
+    }
+
+
     render() {
         return (
                 <View style={this.style.container}>
                     <Text style={this.style.text}>
                         Page
                     </Text>
+                    <View style={this.style.navbar}>
+                    	<NavBar/>
+                	</View>
+                	<Image style={this.style.circle}
+                		source={require('./assets/stock_prof_pic.jpg')}/>
                     <Button
+                    	style={this.style.requestButton}
                         onPress={this.buttonActionReq} 
                         title={'Request Location'}
                         color='#841584'
                     />
-                     <Button
-                        onPress={this.buttonActionSend}
-                        title={'Send Location'}
-                        color='#841584'
-                    />
+                    {this.renderSend()}
                 </View>
                );
     }

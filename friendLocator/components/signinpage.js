@@ -110,8 +110,15 @@ export default class SignInPage extends Component {
                     title={this.state.toggle ? 'Log In' : 'Sign Up'}
                     color='#841584'
                 />
+            </View>
+        );
+    }
 
-                <Text style={this.style.text}>
+}
+
+
+/*
+<Text style={this.style.text}>
                     {this.state.actionText}
                 </Text>
 
@@ -120,10 +127,5 @@ export default class SignInPage extends Component {
                     Pass: {this.state.password}{'\n'}
                     toggle: {this.state.toggle ? 'True' : 'False'}
                 </Text>
-
-            </View>
-        );
-    }
-
-}
+*/
 

@@ -55,15 +55,15 @@ export default class SearchBar extends Component {
                 console.log('[*] search success')
             })
 
-        if (!success) {
-            this.setState({results: ['no results']})
-        } 
-        else {
+        if (success) {
             this.setState({results: globals.searchresults})
             //add to list
             //var temp = this.state.results
             //temp.push(query)
             //this.setState({results: temp})
+        } 
+        else {
+            this.setState({results: ['no results']})
         }
     }
     
@@ -76,6 +76,7 @@ export default class SearchBar extends Component {
         return (
             <View style={this.style.container}>
                 <TextInput
+                    placeholder='search'
                     style={this.style.inputbox}
                     onChangeText={(text) => this.onTextUpdate(text)}
                 />

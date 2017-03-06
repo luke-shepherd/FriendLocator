@@ -41,9 +41,12 @@ export default class MapPage extends Component {
             },
             searchbar: {
                 position: 'absolute',
+                justifyContent: 'center',
                 alignItems: 'center',
-                top: 50,
-                left: 0,
+                top: 58,
+                left: 8,
+                right: 8,
+
             },
             navbar: {
                 position: 'absolute',
@@ -106,8 +109,7 @@ export default class MapPage extends Component {
                 </View>
                 <MapView style={this.style.map}
                     region={this.state.region}
-                    showsUserLocation={true}
-                    showsMyLocationButton={true}/>
+                    showsUserLocation={true}/>
                 <View style={this.style.searchbar}>
                     <SearchBar/>
                 </View>

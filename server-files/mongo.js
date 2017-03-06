@@ -7,8 +7,11 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
   name: String,
+  firstName: String,
+  lastName: String,
   password: String,
   token: String,
+  friends_viewable: [String],
   friends_list: [String],
   friends_request: [String],
   friends_notifications: [String],

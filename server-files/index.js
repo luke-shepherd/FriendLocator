@@ -463,7 +463,7 @@ app.route('/fs/download/:file').get(function(req, res) {
 */
 
 // Query a user's info
-apiRoutes.post('/userQuery', function (req, res) {
+apiRoutes.post('/userquery', function (req, res) {
     console.log("Received name: ", req.body.user);
     console.log("Received password: ", req.body.pass);
     User.findOne({'name': req.body.user}, function(err, obj) {
@@ -472,12 +472,12 @@ apiRoutes.post('/userQuery', function (req, res) {
         }
         console.log("The following object was received from the query: ", obj);
         if (!obj) {
-            res.json({"type": 'userQuery',
+            res.json({"type": 'userquery',
                       "success": false,
                       "reason": 'The user does not exist!'});
         }
         else {
-            res.json({"type": 'userQuery',
+            res.json({"type": 'userquery',
                       "name": true,
                       "success": true,
                       "friends_list": obj.friends_list,
@@ -487,11 +487,10 @@ apiRoutes.post('/userQuery', function (req, res) {
 });
 
 apiRoutes.post('/search', function(req,res){
-  var requesting_user = req.body.user;
-  var lookup          = req.body.lookup;
-  console.log("Requesting user:", requesting_user);
+  var lookup  = req.body.lookup;
+  console.log("Looking up:", lookup);
 
-  User.findOne({'name':req.body.name}, function(err,obj){
+  User.find({'name': {$regex: new RegExp('^' + lookup + '.*')}}, function(err,obj){
     if (err) return handleError(err);
 
     console.log("Object received from query: ", obj);
@@ -501,14 +500,10 @@ apiRoutes.post('/search', function(req,res){
                 "success": false,
                 "reason": 'Error: User does not exist'});
     }else{
-      console.log("Object received from query: ",obj);
-      var user_friendList = obj.friends_list;
-
 
       res.json({"type": 'search',
                 "success": true,
-                "results": ["ted cruz", "jimmy page", "frogman"]})
-
+                "results": obj});
     }
   });
 });

@@ -490,7 +490,7 @@ apiRoutes.post('/search', function(req,res){
   var lookup  = req.body.lookup;
   console.log("Looking up:", lookup);
 
-  User.find({'name': {$regex: new RegExp('^' + lookup + '.*')}}, function(err,obj){
+  User.find({'name': {$regex: new RegExp('^' + lookup + '.*'), $options: 'i'}}, function(err,obj){
     if (err) return handleError(err);
 
     console.log("Object received from query: ", obj);

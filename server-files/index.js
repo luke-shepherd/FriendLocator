@@ -500,10 +500,16 @@ apiRoutes.post('/search', function(req,res){
                 "success": false,
                 "reason": 'Error: User does not exist'});
     }else{
-
+      var searchResults = [];
+      obj.forEach(function(obj){
+         searchResults.push(obj.name);
+                   
+                   
+      });
+      
       res.json({"type": 'search',
                 "success": true,
-                "results": obj});
+                "results": searchResults});
     }
   });
 });

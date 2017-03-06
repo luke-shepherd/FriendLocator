@@ -48,8 +48,9 @@ Searched MongoDB for a name with the name key and creates a new User model to be
 */
 app.post('/registration', function(req, res){
    //Store form into DB
-   console.log("Received name: ", req.body.user);
    console.log("Received password: ", req.body.pass);
+   console.log("Received username: ", req.body.user);
+   console.log("Received name: ", req.body.firstName + ' ' + req.body.lastName);
    
   User.findOne({'name': req.body.user}, function(err, obj){
     if (err) return handleError(err);
@@ -57,7 +58,8 @@ app.post('/registration', function(req, res){
     console.log("Object received from query: ", obj);
 
     if(!obj){
-      var newUser = new User({name : req.body.user, password: req.body.pass});
+      var newUser = new User({name : req.body.user, password: req.body.pass,
+                             firstName: req.body.firstName, lastName: req.body.lastName});
       newUser.save(function (err,obj,numAffected){
         if(err) return handleError(err);
         res.json({"type": 'registration',
@@ -489,8 +491,13 @@ apiRoutes.post('/userquery', function (req, res) {
 apiRoutes.post('/search', function(req,res){
   var lookup  = req.body.lookup;
   console.log("Looking up:", lookup);
+  var regex = '.*' + lookup + '.*'  
 
-  User.find({'name': {$regex: new RegExp('^' + lookup + '.*'), $options: 'i'}}, function(err,obj){
+  User.find({$or:[
+              {'name': {$regex: new RegExp(regex), $options: 'i'}},
+              {'firstName':{$regex: new RegExp(regex),$options: 'i' }},
+              {'lastName': {$regex: new RegExp(regex), $options: 'i'}  },
+              {'username': {$regex: new RegExp(regex), $options: 'i'} } ]}, function(err,obj){
     if (err) return handleError(err);
 
     console.log("Object received from query: ", obj);

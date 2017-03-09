@@ -59,8 +59,8 @@ var send = function(obj, endpoint, action) {
 
                 case 'updateUser':
                     if (response.success) {
+                        //update global vars
                         console.log(response.notifications)
-
                         console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
                         module.exports.notifications = response.notifications;
                         console.log('RECIEVED NOTIFICATIONS: ' + module.exports.notifications);
@@ -162,6 +162,7 @@ module.exports = {
     routeTo:            route,
     
     notificationinterval: 2000,
+    updateinterval: 2000,
     locationinterval: 200000, 
 }
 

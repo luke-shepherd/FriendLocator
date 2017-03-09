@@ -68,6 +68,12 @@ export default class MapPage extends Component {
     componentDidMount() {
         
         //check for notifications on interval defined in global
+        setInterval( () => {
+            var obj = globals.constructPacket({user: globals.user});
+            var success = globals.sendPacket(obj, endpoint, globals.base_url + 'api/updateuser'
+                () => {console.log('successfully updated')})
+        }, globals.updateinterval)
+
       
         setInterval( () => {
             if (globals.user != '') {

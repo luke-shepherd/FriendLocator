@@ -23,16 +23,16 @@ export default class Main extends Component {
         switch(route.id) {
             case 'SignInPage':  return (<SignInPage nav={navigator}/>);
             case 'TestPage':    return (<TestPage nav={navigator}/>);
-            case 'MapPage':    return (<MapPage nav={navigator}/>);
-            case 'UserPage':   return (<UserPage nav={navigator}/>);
-            case 'NotifPage':    return (<NotifPage nav={navigator}/>);
+            case 'MapPage':     return (<MapPage nav={navigator}/>);
+            case 'UserPage':    return (<UserPage nav={navigator}/>);
+            case 'NotifPage':   return (<NotifPage nav={navigator}/>);
         }
     }
 
     render() {
         return (
             <Navigator
-                initialRoute={{id: 'MapPage'}}
+                initialRoute={{id: 'SignInPage'}}
                 renderScene={this.renderScene.bind(this)}
             />
         );

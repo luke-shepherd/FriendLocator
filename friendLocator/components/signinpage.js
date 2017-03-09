@@ -80,6 +80,17 @@ export default class SignInPage extends Component {
 
     }
 
+    //if they have data skil login page
+    componentDidMount() {
+        globals.load()
+        if (globals.user) {
+            console.log('[*] ' + globals.user + ' has persiting data')
+            globals.routeTo('MapPage')
+        }
+        console.log('[*] no persisting data')
+    }
+
+
     render() {
         return (
             <View style={this.style.container}>

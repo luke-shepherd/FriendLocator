@@ -67,14 +67,20 @@ export default class MapPage extends Component {
 
     componentDidMount() {
         
-        //check for notifications on interval defined in global
+        //persistant data storage
+        setInterval( () => {
+            globals.dump()
+            //globals.load()
+        }, globals.dumpinterval)
+
+        //check for notifications and updates
         setInterval( () => {
             var obj = globals.constructPacket({user: globals.user});
             var success = globals.sendPacket(obj, globals.base_url + 'api/updateUser',
                 () => {console.log('successfully updated')})
         }, globals.updateinterval)
 
-      
+        //send location to server on interval
         setInterval( () => {
             if (globals.user != '') {
                 var obj = globals.constructPacket({user: globals.user,

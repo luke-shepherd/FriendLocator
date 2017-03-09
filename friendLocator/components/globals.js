@@ -1,4 +1,8 @@
 
+import {
+    AsyncStorage,
+} from 'react-native';
+
 var construct = function(obj) {
     var packet = {
         method: 'POST',
@@ -127,8 +131,41 @@ var send = function(obj, endpoint, action) {
     }
 
 var route = function(sceneId) {
-    console.log('navigating to: ' + sceneId)
+    console.log('[+] navigating to: ' + sceneId)
     module.exports.nav.replace({id: sceneId});
+}
+
+//returns key value pairs for all data in module.exports
+var allkeysandvalues = function() {
+    return [['all', 'values'], ['set', 'here']]
+}
+
+//returns keys for all data in module.exports
+var allkeys = function() {
+    return ['all', 'set']
+}
+
+//sets all variables
+var store = function() {
+    //console.log(module.exports)
+    //console.log('[+] storing data')
+    AsyncStorage.multiSet(allkeysandvalues(), 
+        () => {
+            console.log('[+] set a bunch of stuff successfully')
+            //set all globals accordingly
+        })
+}
+
+//gets all variables
+var get = function() {
+    //console.log(module.exports)
+    keys = ['all', 'set']
+    AsyncStorage.multiGet(allkeys(), 
+        (err, data) => {
+            console.log('[+] got a bunch of stuff successfully')
+            //set all globals accordingly
+            console.log(data)
+        })
 }
 
 module.exports = {
@@ -160,9 +197,12 @@ module.exports = {
     sendPacket:         send,
     constructPacket:    construct,
     routeTo:            route,
+    dump:               store,
+    load:               get,
     
     notificationinterval: 2000,
     updateinterval: 2000,
     locationinterval: 200000, 
+    dumpinterval: 2000
 }
 

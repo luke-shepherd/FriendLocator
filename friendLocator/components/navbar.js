@@ -50,11 +50,28 @@ export default class NavBar extends Component {
 
     leftAction() {
         console.log('[+] navbar: left')
+        page = globals.nav.getCurrentRoutes()[0].id
+        switch (page) {
+            case 'MapPage':
+                globals.routeTo('UserPage')
+                break
+            default:
+                globals.routeTo('MapPage')
+                break
+        }
     }
 
     rightAction() {
         console.log('[+] navbar: right')
-        globals.routeTo('NotifPage')
+        page = globals.nav.getCurrentRoutes()[0].id
+        switch (page) {
+            case 'MapPage':
+                globals.routeTo('NotifPage')
+                break
+            default:
+                globals.routeTo('MapPage')
+                break
+        }
     }
 
     render() {

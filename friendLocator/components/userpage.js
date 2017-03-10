@@ -40,6 +40,7 @@ export default class UserPage extends Component {
   				width: 100,
   				borderRadius: 30,
   				backgroundColor: '#F5FCFF',
+                marginBottom: 10,
 			},
 
         });
@@ -85,11 +86,10 @@ export default class UserPage extends Component {
             />)
     }
 
-
     render() {
         return (
                 <View style={this.style.container}>
-                    <Text style={this.style.text}>
+                    <Text style={globals.userpage}>
                         Page
                     </Text>
                     <View style={this.style.navbar}>

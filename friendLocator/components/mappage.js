@@ -122,14 +122,14 @@ export default class MapPage extends Component {
     render() {
         return (
              <View style={this.style.container}>
-                <View style={this.style.navbar}>
-                    <NavBar/>
-                </View>
                 <MapView style={this.style.map}
                     region={this.state.region}
                     showsUserLocation={true}/>
                 <View style={this.style.searchbar}>
                     <SearchBar/>
+                </View>
+                <View style={this.style.navbar}>
+                    <NavBar/>
                 </View>
             </View>  
         );

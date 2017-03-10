@@ -22,6 +22,7 @@ export default class SignInPage extends Component {
             toggle: false,
             buttonTitle: 'Sign Up',
             actionText: '',
+            renderToggle: false,
         }
 
         this.style = StyleSheet.create({
@@ -74,49 +75,61 @@ export default class SignInPage extends Component {
     componentDidMount() {
         globals.load()
         setTimeout ( () => {
-            if (globals.user) {
-                console.log('[*] ' + globals.user + ' has persiting data')
-                globals.routeTo('MapPage')
-            }
-            else {
-                console.log('[*] no persisting data')
+            if (!this.state.renderToggle) {
+                if (globals.user) {
+                    console.log('[*] ' + globals.user + ' has persiting data')
+                    globals.routeTo('MapPage')
+                }
+                else {
+                    console.log('[*] no persisting data')
+                    this.setState({renderToggle: true})
+                }
             }
         }, globals.loginwait)
+
     }
 
-
     render() {
-        return (
-            <View style={this.style.container}>
-                <Text style={this.style.text}>
-                    Login or Sign Up!
-                </Text>
+        if (this.state.renderToggle) {
+            return (
+                <View style={this.style.container}>
+                    <Text style={this.style.text}>
+                        Login or Sign Up!
+                    </Text>
 
-                <TextInput
-                    style={this.style.inputbox}
-                    placeholder='Enter Username'
-                    onChangeText={(username) => this.setState({username})}
-                />
+                    <TextInput
+                        style={this.style.inputbox}
+                        placeholder='Enter Username'
+                        onChangeText={(username) => this.setState({username})}
+                    />
 
-                <TextInput
-                    style={this.style.inputbox}
-                    placeholder='Enter Password'
-                    onChangeText={(password) => this.setState({password})}
-                />
+                    <TextInput
+                        style={this.style.inputbox}
+                        placeholder='Enter Password'
+                        onChangeText={(password) => this.setState({password})}
+                    />
 
-                <Switch
-                    value={this.state.toggle}
-                    style={this.style.toggle}
-                    onValueChange={(value) => this.setState({toggle:value})}
-                />
+                    <Switch
+                        value={this.state.toggle}
+                        style={this.style.toggle}
+                        onValueChange={(value) => this.setState({toggle:value})}
+                    />
 
-                <Button
-                    onPress={this.buttonAction}
-                    title={this.state.toggle ? 'Log In' : 'Sign Up'}
-                    color='#841584'
-                />
-            </View>
-        );
+                    <Button
+                        onPress={this.buttonAction}
+                        title={this.state.toggle ? 'Log In' : 'Sign Up'}
+                        color='#841584'
+                    />
+                </View>
+            );
+        }
+        else {
+            return (
+                 <View style={this.style.container}>
+                    
+                </View>
+            );
+        }
     }
 
 }

@@ -19,7 +19,7 @@ export default class UserPage extends Component {
         super(props);
         this.style = StyleSheet.create({
             container: {
-                flex: 10,
+                flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',
@@ -36,7 +36,8 @@ export default class UserPage extends Component {
                 right: 0,
             },
             circle: {
-                flex: 1,
+                height: 50,
+                width: 50,
                 borderRadius: 30,
                 backgroundColor: '#F5FCFF',
                 marginBottom: 10,
@@ -91,9 +92,6 @@ export default class UserPage extends Component {
                     <Text style={this.style.text}>
                         {globals.user}
                     </Text>
-                    <View style={this.style.navbar}>
-                        <NavBar/>
-                    </View>
                     <Image style={this.style.circle}
                         source={require('./assets/stock_prof_pic.jpg')}/>
                     <Button
@@ -103,6 +101,10 @@ export default class UserPage extends Component {
                         color='#841584'
                     />
                     {this.renderSend()}
+                
+                    <View style={this.style.navbar}>
+                            <NavBar/>
+                    </View>
                 </View>
                );
     }

@@ -20,7 +20,7 @@ export default class NotifPage extends Component {
             {rowHasChanged: (r1,r2) => r1 !== r2}
         )
         this.state = {
-            data: globals.notifications,
+            data: globals.notifications.concat(globals.pending).concat(globals.requests),
             ntext: 'no notifications :('
         }
 
@@ -32,6 +32,7 @@ export default class NotifPage extends Component {
                 backgroundColor: '#F5FCFF',
             },
             listcontainer: {
+                flex: 1,
                 top: 60,
             },
             row: {
@@ -41,7 +42,7 @@ export default class NotifPage extends Component {
                 alignItems: 'center',
             },
             rowtext: {
-                fontSize: 20,
+                fontSize: 15,
                 textAlign: 'center',
                 marginTop: 20,
                 marginBottom: 5,
@@ -53,26 +54,18 @@ export default class NotifPage extends Component {
                 right: 0,
             },
             ntext: {
+                flex:1,
                 position: 'absolute',
                 top: 300,
                 left: 100,
-                fontSize: 50,
+                fontSize: 20,
             },
         });
     }
 
     componentDidMount() {
-        //get notifications from server
-        setInterval( () => {
-            var url = globals.base_url + 'api/updateUser'
-            var obj = globals.constructPacket({user: globals.user})
-            var success = globals.sendPacket(obj, url, 
-                () => {
-                    console.log('[+] update success from notif page')
-                })
-
-                this.setState({data: globals.notifications})
-        },globals.notificationinterval)
+        //do nothing special
+        
 
     }
 
@@ -94,7 +87,7 @@ export default class NotifPage extends Component {
             //this.setState({data: temp})
 
             var url = globals.base_url + 'api/declineFriend'
-            var obj = globals.constructPacket({user: globals.user})
+            var obj = globals.constructPacket({username: globals.user, friend: notif})
             var success = globals.sendPacket(obj, url, 
                 () => {
                     console.log('[+] sucess declined friend: ' + notif)
@@ -116,7 +109,7 @@ export default class NotifPage extends Component {
             //this.setState({data: temp})
 
             var url = globals.base_url + 'api/acceptFriend'
-            var obj = globals.constructPacket({user: globals.user})
+            var obj = globals.constructPacket({username: globals.user, friend: notif})
             var success = globals.sendPacket(obj, url, 
                 () => {
                     console.log('[+] success accepted friend: ' + notif)

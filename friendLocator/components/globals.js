@@ -60,9 +60,12 @@ var send = function(obj, endpoint, action) {
                 case 'updateUser':
                     if (response.success) {
                         //update global vars
-                        //console.log(response.notifications)
+                        console.log(response)
                         //console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
                         module.exports.notifications = response.notifications;
+                        module.exports.requests = response.requests;
+                        module.exports.pending = response.pending;
+                        
                         //console.log('RECIEVED NOTIFICATIONS: ' + module.exports.notifications);
  
                     }
@@ -188,6 +191,9 @@ module.exports = {
     //pending info, should notify user if anything here
     notifications:  [],
     searchresults: [],
+    requests: [],
+    pending: [],
+
 
     userLocation: {
         latitude:   '',
@@ -208,6 +214,6 @@ module.exports = {
     updateinterval: 2000,
     locationinterval: 2000, 
     dumpinterval: 1000,
-    loginwait: 1000,
+    loginwait: 1,
 }
 

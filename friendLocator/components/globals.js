@@ -163,9 +163,9 @@ var get = function() {
     ////console.log(module.exports)
     AsyncStorage.multiGet(allkeys(), 
         (err, data) => {
-            //console.log('[+] got a bunch of stuff successfully')
+            console.log('[+] got a bunch of stuff successfully')
             //set all globals accordingly
-            //console.log(data)
+            console.log(data)
             for (var i = 0; i < data.length; i++) {
                 switch (data[i][0]) {
                     case 'user':

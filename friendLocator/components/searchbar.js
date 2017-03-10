@@ -55,21 +55,13 @@ export default class SearchBar extends Component {
                 console.log('[*] search success')
             })
 
-        console.log('sendpacket return')
-        console.log(success)
-        console.log('current global var')
-        console.log(globals.searchresults)
-        //if (success) {
-            console.log('RESULTS BEFORE SET:')
-            console.log(globals.searchresults)
-
-            if (globals.searchresults) {
-                this.setState({results: globals.searchresults})
-            }
-        //} 
-            else {
-                this.setState({results: ['no results']})
-            }
+        if (globals.searchresults) {
+            this.setState({results: globals.searchresults})
+        }
+        else {
+            globals.searchresults = ['no results']
+            this.setState({results: globals.searchresults})
+        }
     }
     
     buttonAction(user) {

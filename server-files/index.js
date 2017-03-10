@@ -340,10 +340,14 @@ apiRoutes.post('/updateuser/', function(req, res){
                 "success": false,
                 "reason": 'Error: User does not exist'});
         }else{ 
+           var pendings = obj.friends_pending.concat(obj.locations_pending);
+           var requests = obj.friends_request.concat(obj.location_requests);
             res.json({"type": 'updateUser',
                 "success": true,
                 "reason": 'Requesting user exists',
-                "notifications": obj.friends_notifications});
+                "notifications": obj.friends_notifications,
+                "requests": requests,
+                "pendings": pendings});
         }
     }); 
     

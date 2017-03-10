@@ -85,8 +85,11 @@ export default class SignInPage extends Component {
             //    () => {
             //        globals.routeTo('MapPage')
             //    })
+                    globals.routeTo('MapPage')
         }
-        console.log('[*] no persisting data')
+        else {
+            console.log('[*] no persisting data')
+        }
     }
 
 

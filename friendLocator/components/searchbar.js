@@ -55,12 +55,8 @@ export default class SearchBar extends Component {
                 console.log('[*] search success')
             })
 
-        if (globals.searchresults) {
-            this.setState({results: globals.searchresults})
-        }
-        else {
-            globals.searchresults = ['no results']
-            this.setState({results: globals.searchresults})
+        if (!globals.searchresults) {
+            globals.searchresults = ['no results :(']
         }
     }
     

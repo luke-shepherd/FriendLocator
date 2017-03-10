@@ -20,10 +20,6 @@ var construct = function(obj) {
 
 var send = function(obj, endpoint, action) {
 
-    //DEBUG
-    //action()
-    //return true
-    
     var url = endpoint
     let response = fetch(url, obj)
         //.then((response) => response.json())
@@ -104,11 +100,12 @@ var send = function(obj, endpoint, action) {
 
                 case 'search':
                     if (response.success) {
-                        //console.log("RECIEVED SEARCH FROM SERVER")
-                        //console.log(response.results);
-                        module.exports.searchresults = response.results;
-                        //console.log("SAVED IN SEARCHRESULTS")
-                        //console.log(module.exports.searchresults)
+                        if (!response.results) {
+                            module.exports.searchresults = ['no results :(']
+                        }
+                        else {
+                            module.exports.searchresults = response.results;
+                        }
                         return true
                     }
                     else {

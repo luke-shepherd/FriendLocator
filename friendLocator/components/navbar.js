@@ -88,7 +88,7 @@ export default class NavBar extends Component {
                     underlayColor='#2f2f2f'
                 >
                     <Text style={this.style.leftbutton}>
-                        Left
+                        &lt;
                     </Text>
                 </TouchableHighlight>
                 
@@ -101,7 +101,7 @@ export default class NavBar extends Component {
                     underlayColor='#2f2f2f'
                 >
                     <Text style={this.style.rightbutton}>
-                        Right
+                        &gt;
                     </Text>
                 </TouchableHighlight>
             </View>

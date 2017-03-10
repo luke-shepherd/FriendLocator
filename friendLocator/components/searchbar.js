@@ -56,11 +56,17 @@ export default class SearchBar extends Component {
             })
 
         if (success) {
-            this.setState({results: globals.searchresults})
+            //this.setState({results: globals.searchresults})
             //add to list
-            //var temp = this.state.results
-            //temp.push(query)
-            //this.setState({results: temp})
+
+            console.log('RESULTS BEFORE SET:')
+            console.log(globals.searchresults)
+
+            if (globals.searchresults) {
+                var temp = globals.searchresults
+                temp.push(query)
+                this.setState({results: temp})
+            }
         } 
         else {
             this.setState({results: ['no results']})

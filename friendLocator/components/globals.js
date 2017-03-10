@@ -29,7 +29,7 @@ var send = function(obj, endpoint, action) {
         //.then((response) => response.json())
         .then((response) => {
             
-            //console.log('TYPE IS: ' + JSON.parse(response._bodyText)["type"])
+            ////console.log('TYPE IS: ' + JSON.parse(response._bodyText)["type"])
 
             response = JSON.parse(response._bodyText)
 
@@ -43,20 +43,20 @@ var send = function(obj, endpoint, action) {
                 case 'login':
 
                     if (response.success) {
-                        console.log('logging user in')
+                        //console.log('logging user in')
                         //parse and set global variables
                         //globals.token = responseJson.token
                         //return false here if problem
-                        console.log('token:')
-                        console.log(response.token)
+                        //console.log('token:')
+                        //console.log(response.token)
                         globals.token = response.token
-                        console.log('Global Token: ');
-                        console.log(globals.token);
+                        //console.log('Global Token: ');
+                        //console.log(globals.token);
 
                     }
                     else {
-                        console.log('log in fail:')
-                        console.log(response.reason)
+                        //console.log('log in fail:')
+                        //console.log(response.reason)
                         return false
                     }
                     break
@@ -64,59 +64,62 @@ var send = function(obj, endpoint, action) {
                 case 'updateUser':
                     if (response.success) {
                         //update global vars
-                        console.log(response.notifications)
-                        console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
+                        //console.log(response.notifications)
+                        //console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
                         module.exports.notifications = response.notifications;
-                        console.log('RECIEVED NOTIFICATIONS: ' + module.exports.notifications);
+                        //console.log('RECIEVED NOTIFICATIONS: ' + module.exports.notifications);
  
                     }
                     else {
-                        console.log('update failed')
-                        console.log(response.reason)
+                        //console.log('update failed')
+                        //console.log(response.reason)
                         return false
                     }
                     break
 
                 case 'registration':
-                    console.log('signing user up')
+                    //console.log('signing user up')
                     break
 
                 case 'updateloc':
-                    console.log('LOCATION RESPONSE:');
-                    console.log(response);
+                    //console.log('LOCATION RESPONSE:');
+                    //console.log(response);
                     break
                 
                 case 'acceptFriend':
-                    console.log('[*] accept friend:');
+                    //console.log('[*] accept friend:');
                     if (!response.success) {
-                        console.log(response.reason);
+                        //console.log(response.reason);
                         return false
                     }
                     break
 
                 case 'declineFriend':
                     if (!response.success) {
-                        console.log(response.reason);
+                        //console.log(response.reason);
                         return false
                     }
-                    console.log('[*] decline friend:');
+                    //console.log('[*] decline friend:');
                     break
 
                 case 'search':
                     if (response.success) {
-                        console.log(response.results);
-                        module.exports.searchresults = response.results
+                        //console.log("RECIEVED SEARCH FROM SERVER")
+                        //console.log(response.results);
+                        module.exports.searchresults = response.results;
+                        //console.log("SAVED IN SEARCHRESULTS")
+                        //console.log(module.exports.searchresults)
                     }
                     else {
-                        console.log(response.reason);
+                        //console.log(response.reason);
                         return false
                     }
                     break
 
                 default:
-                    console.log('Receive unknown type ERROR WILL ROBINSON');
-                    console.log('This is what I did get')
-                    console.log(response)
+                    //console.log('Receive unknown type ERROR WILL ROBINSON');
+                    //console.log('This is what I did get')
+                    //console.log(response)
                     break
 
             }
@@ -125,13 +128,13 @@ var send = function(obj, endpoint, action) {
             return true
         })
         .catch((error) => {
-            console.log(error)
+            //console.log(error)
             return false
         })
     }
 
 var route = function(sceneId) {
-    console.log('[+] navigating to: ' + sceneId)
+    //console.log('[+] navigating to: ' + sceneId)
     module.exports.nav.replace({id: sceneId});
 }
 
@@ -147,24 +150,24 @@ var allkeys = function() {
 
 //sets all variables
 var store = function() {
-    //console.log(module.exports)
-    //console.log('[+] storing data')
+    ////console.log(module.exports)
+    ////console.log('[+] storing data')
     AsyncStorage.multiSet(allkeysandvalues(), 
         () => {
-            console.log('[+] set a bunch of stuff successfully')
+            //console.log('[+] set a bunch of stuff successfully')
             //set all globals accordingly
         })
 }
 
 //gets all variables
 var get = function() {
-    //console.log(module.exports)
+    ////console.log(module.exports)
     keys = ['all', 'set']
     AsyncStorage.multiGet(allkeys(), 
         (err, data) => {
-            console.log('[+] got a bunch of stuff successfully')
+            //console.log('[+] got a bunch of stuff successfully')
             //set all globals accordingly
-            console.log(data)
+            //console.log(data)
         })
 }
 

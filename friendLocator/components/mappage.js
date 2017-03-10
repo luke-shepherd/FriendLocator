@@ -113,6 +113,13 @@ export default class MapPage extends Component {
         )
     }
 
+    /*updateFriendsViewable endpoint {
+        'type': 'updateFriendsViewable'
+        'locations': [{'longitude': , 'latitude': , 'username': }]
+    }
+
+
+*/
     render() {
         return (
              <View style={this.style.container}>

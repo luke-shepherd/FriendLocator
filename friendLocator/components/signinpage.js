@@ -60,7 +60,7 @@ export default class SignInPage extends Component {
 
         var type = this.state.toggle ? 'signup' : 'login'
         var obj = globals.constructPacket(
-            {user: this.state.username,
+            {username: this.state.username,
              pass: this.state.password,})
 
         var url = globals.base_url

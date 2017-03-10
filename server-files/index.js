@@ -96,7 +96,7 @@ apiRoutes.post('/login', function(req,res){
                   "reason": 'Incorrect password'});
      }else{
          var token = jwt.sign(obj, app.get('superSecret'), {
-                expiresIn: 60*180 // expires in 180 mins
+                expiresIn: 60*180*7 // expires in 180 mins
          });
          obj.token = token;
          res.json({"type": "login",
@@ -111,7 +111,7 @@ apiRoutes.post('/login', function(req,res){
 //Middleware to verify incoming JWT token
 apiRoutes.use(function(req, res, next){
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    
+   
     if(token){
        jwt.verify(token, app.get('superSecret'), function(err, decoded){
           if(err){
@@ -328,7 +328,7 @@ apiRoutes.post('/friendpage/getlist/', function(req, res){
 });
 
 //Update user route from Packet Notes
-apiRoutes.post('/updateUser/', function(req, res){
+apiRoutes.post('/updateuser/', function(req, res){
     var requesting_user = req.body.username;
     console.log("Requesting user: ", requesting_user);
     
@@ -406,7 +406,8 @@ apiRoutes.post('/updateloc/', function(req, res){
     console.log("Updated latitude: ", updated_latitude);
     
     User.findOneAndUpdate({'username':requesting_user},
-                            {$pushAll: {"location.coordinates": [updated_longitude, updated_latitude]}},
+                           // {$pushAll: {"location.coordinates": [updated_longitude, updated_latitude]}},
+                           { $set: {"longitude": updated_longitude, "latitude": updated_latitude}},
                             {new: true}, function(err, obj){
         if(err) return handleError(err);
           
@@ -415,7 +416,7 @@ apiRoutes.post('/updateloc/', function(req, res){
                    "success": false,
                    "reason": 'User does not exist'});
         }else{
-        console.log("This is object: ", obj.location);
+        console.log("This is object: ", obj);
         res.json({"type": 'updateloc',
                   "success": true,
                   "reason": 'User exists and no errors reported'});
@@ -423,6 +424,186 @@ apiRoutes.post('/updateloc/', function(req, res){
    });   
     
 });
+
+//Request location permission for a friend route
+apiRoutes.post('/requestLocation/', function(req, res){
+   var requesting_user = req.body.username;
+   var friend_requested = req.body.friend;
+   console.log("Requesting user: ", requesting_user);  
+   console.log("Requesting location for: ", friend_requested);   
+
+   User.findOneAndUpdate({'username': friend_requested,
+			  'friends_list': { $in: [requesting_user]}},
+			   {$push: {location_requests: requesting_user}},
+			   {new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'locationRequest',
+                   "success": false,
+                   "reason": 'User does not exist'});
+      }else{
+        console.log("Querying user: ", friend_requested);
+        console.log("Location request array: ", obj.location_requests); 
+        User.findOneAndUpdate({'username': requesting_user},
+                              {$push: {locations_pending: friend_requested}},
+                              {new: true}, function(err, obj){
+                if(err) return handleError(err);         
+                console.log("Querying username: ", requesting_user);
+                console.log("This is pendings array for: ", obj.locations_pending);
+                res.json({"type": 'locationRequest',
+                  "success": true,
+                  "reason": 'Both friends exist and no errors reported'});
+        });      
+      }
+   });
+
+});
+
+//Accept location permission for a friend route
+apiRoutes.post('/acceptLocation/', function(req, res){    
+   var requesting_user = req.body.username;
+   var accepting_friend = req.body.friend;
+   var accept_notification = requesting_user + " has accepted your location request";
+   console.log("Requesting user for: ", requesting_user);  
+   console.log("Accepting location for: ", accepting_friend);   
+   
+   //Update friends list of requesting user
+   User.findOneAndUpdate({'username': requesting_user},
+    {$pull: {locations_pending: accepting_friend}, $push: {friends_viewable: accepting_friend}},
+	{new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'acceptLocation',
+                   "success": false,
+                   "reason": 'User does not exist or User is not friend'});
+      }else{
+        console.log("Querying user: ", requesting_user);
+        console.log("This is updated user object: ", obj); 
+        console.log("Location request array: ", obj.location_requests); 
+        //Update friends list of friend
+        User.findOneAndUpdate({'username': accepting_friend},
+			   {$pull: {location_requests: requesting_user} ,$push: {friends_viewable: requesting_user, friends_notifications: accept_notification}},
+			   {new: true}, function(err, obj){
+            if(err) return handleError(err);
+      
+            if(obj == null){
+                res.json({"type": 'acceptFriend',
+                   "success": false,
+                   "reason": 'Friend does not exist'});
+            }else{
+                console.log("Querying user: ", accepting_friend);
+                console.log("This is updated Friend object: ", obj); 
+                console.log("Friends viewable array: ", obj.friends_viewable); 
+                res.json({"type": 'acceptLocation',
+                  "success": true,
+                  "reason": 'Both friends exist'});
+            }
+        });
+      }
+   });
+   
+});
+
+//Remove friend from friends_viewable
+apiRoutes.post('/deleteLocation/', function(req, res){
+    var requesting_user = req.body.username;
+    var deleting_user = req.body.friend;
+    console.log("Requesting user for: ", requesting_user);
+    console.log("Delete user for: ", deleting_user);
+    
+    //Update friends list of requesting user
+    User.findOneAndUpdate({'username':requesting_user},
+        {$pull: {friends_viewable: deleting_user}},
+        {new: true}, function(err, obj){
+          if(err) return handleError(err);
+          
+          if(obj == null){
+            res.json({"type": 'deleteFriend',
+                   "success": false,
+                   "reason": 'User does not exist'});
+          }else{
+            console.log("Requesting user object: ", obj);
+            console.log("Friends list array: ", obj.friends_viewable); 
+            //Update friends list of friend
+            User.findOneAndUpdate({'username': deleting_user},
+                {$pull: {friends_viewable: requesting_user}},
+                {new: true}, function(err, obj){
+                    if(err) return handleError(err);
+          
+                    if(obj == null){
+                        res.json({"type": 'deleteFriend',
+                            "success": false,
+                            "reason": 'Deleting user does not exist'});
+                    }else{
+                        console.log("Friend object: ", obj); 
+                        console.log("Friends viewable array: ", obj.friends_viewable); 
+                        res.json({"type": 'deleteFriend',
+                                  "success": true,
+                                  "reason": 'Both users exist'
+                        });      
+                    }   
+            });
+          }
+    });     
+   
+
+});
+
+//Update friends viewable location 
+//ToDo: Update updatelocation method to store new location schema, Merge function with updateUser
+apiRoutes.post('/updateFriendsViewable/', function(req, res){
+    var requesting_user = req.body.username;
+   
+    
+    console.log("Requesting user: ", requesting_user);
+    console.log("Friends viewable array: ", friends_viewable);
+
+    
+    User.findOne({'username':requesting_user}, function(err, obj){
+        if(err) return handleError(err);
+          
+        if(obj == null){
+         res.json({"type": 'updateFriendsViewable',
+                   "success": false,
+                   "reason": 'User does not exist'});
+        }else{
+        var array = [];
+        console.log("This is friends viewable: ", obj.friends_viewable);
+        for(var i = 0; i < obj.friends_viewable.length; i++){
+            var friend_to_lookup = obj.friends_viewable[i];
+            User.findOne({'username': friend_to_lookup}, function(err, obj){
+                if(err) return handleError(err);  
+                if(obj == null){
+                    res.json({"type": 'updateFriendsViewable',
+                        "success": false,
+                        "reason": 'User does not exist'});
+                }else{
+                    if(obj.broadcast){
+                        console.log("Pushing user into array: ", obj.username);
+                        console.log("Longitude for user: ", obj.location.longitude);
+                        console.log("Latitude for user: ", obj.location.latitude);
+                        array.push({
+                            username: friend_to_lookup,
+                            longitude: obj.location.longitude,
+                            latitude: obj.location.latitude
+                    
+                        });
+                    }
+                }
+            });
+        }
+   
+        res.json({"type": 'updateFriendsViewable',
+                  "success": true,
+                  "reason": 'User exists and no errors reported',
+                  "locations": array});
+        }
+   });   
+    
+});
+
 
 //Delete group route
 
@@ -488,6 +669,8 @@ apiRoutes.post('/userquery', function (req, res) {
     });
 });
 
+
+//Search bar function
 apiRoutes.post('/search', function(req,res){
   var lookup  = req.body.lookup;
   console.log("Looking up:", lookup);

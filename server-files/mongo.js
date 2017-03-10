@@ -16,12 +16,19 @@ var userSchema = new Schema({
   friends_request: [String],
   friends_notifications: [String],
   friends_pending: [String],
-  location: {
-   type: {
-     type: String,
-     default: 'Point'
-   },
-   coordinates: [Number]
+  location_requests: [String],
+  locations_pending: [String],
+  longitude:{ 
+      type: Number,
+      default: 0
+  },
+  latitude: {
+      type: Number,
+      default: 0
+  },
+  broadcast: {
+    type: Boolean,
+    default: true
   }
 });
 

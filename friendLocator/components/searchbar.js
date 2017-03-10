@@ -67,9 +67,9 @@ export default class SearchBar extends Component {
                 this.setState({results: globals.searchresults})
             }
         //} 
-        //else {
-            this.setState({results: ['no results']})
-        //}
+            else {
+                this.setState({results: ['no results']})
+            }
     }
     
     buttonAction(user) {

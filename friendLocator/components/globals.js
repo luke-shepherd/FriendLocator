@@ -165,9 +165,7 @@ var get = function() {
         (err, data) => {
             console.log('[+] got a bunch of stuff successfully')
             //set all globals accordingly
-            console.log(data)
-            console.log(data[0][1])
-            console.log(data[1][1])
+            //console.log(data)
             module.exports.user = data[0][1]
             module.exports.token = data[1][1]
         })

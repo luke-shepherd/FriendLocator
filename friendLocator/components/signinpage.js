@@ -73,18 +73,9 @@ export default class SignInPage extends Component {
     //if they have data skil login page
     componentDidMount() {
         globals.load()
+        console.log('username::::' + globals.user)
         if (globals.user) {
             console.log('[*] ' + globals.user + ' has persiting data')
-            //var type = 'login'
-            //var obj = globals.constructPacket(
-            //    {username: globals.user,
-            //     pass: globals.pass,})
-
-            //var url = globals.base_url + 'api/login'
-            //var success = globals.sendPacket(obj, url,
-            //    () => {
-            //        globals.routeTo('MapPage')
-            //    })
             globals.routeTo('MapPage')
         }
         else {

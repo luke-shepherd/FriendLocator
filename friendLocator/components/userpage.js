@@ -19,7 +19,7 @@ export default class UserPage extends Component {
         super(props);
         this.style = StyleSheet.create({
             container: {
-                flex: 1,
+                flex: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',
@@ -36,8 +36,7 @@ export default class UserPage extends Component {
                 right: 0,
             },
             circle: {
-                height: 100,
-                width: 100,
+                flex: 1,
                 borderRadius: 30,
                 backgroundColor: '#F5FCFF',
                 marginBottom: 10,
@@ -89,8 +88,8 @@ export default class UserPage extends Component {
     render() {
         return (
                 <View style={this.style.container}>
-                    <Text style={globals.userpage}>
-                        Page
+                    <Text style={this.style.text}>
+                        {globals.user}
                     </Text>
                     <View style={this.style.navbar}>
                         <NavBar/>

@@ -109,6 +109,7 @@ var send = function(obj, endpoint, action) {
                         module.exports.searchresults = response.results;
                         //console.log("SAVED IN SEARCHRESULTS")
                         //console.log(module.exports.searchresults)
+                        return true
                     }
                     else {
                         //console.log(response.reason);

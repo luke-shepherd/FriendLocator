@@ -55,6 +55,7 @@ export default class SearchBar extends Component {
                 console.log('[*] search success')
             })
 
+        //this is redundant
         if (!globals.searchresults) {
             globals.searchresults = ['no results :(']
         }

@@ -470,7 +470,7 @@ apiRoutes.post('/acceptLocation/', function(req, res){
    
    //Update friends list of requesting user
    User.findOneAndUpdate({'username': requesting_user},
-    {$pull: {locations_pending: accepting_friend}, $push: {friends_viewable: accepting_friend}},
+    {$pull: {location_requests: accepting_friend}, $push: {friends_viewable: accepting_friend}},
 	{new: true}, function(err, obj){
       if(err) return handleError(err);
       
@@ -484,7 +484,7 @@ apiRoutes.post('/acceptLocation/', function(req, res){
         console.log("Location request array: ", obj.location_requests); 
         //Update friends list of friend
         User.findOneAndUpdate({'username': accepting_friend},
-			   {$pull: {location_requests: requesting_user} ,$push: {friends_viewable: requesting_user, friends_notifications: accept_notification}},
+			   {$pull: {locations_pending: requesting_user} ,$push: {friends_viewable: requesting_user, friends_notifications: accept_notification}},
 			   {new: true}, function(err, obj){
             if(err) return handleError(err);
       
@@ -582,12 +582,12 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
                 }else{
                     if(obj.broadcast){
                         console.log("Pushing user into array: ", obj.username);
-                        console.log("Longitude for user: ", obj.location.longitude);
-                        console.log("Latitude for user: ", obj.location.latitude);
+                        console.log("Longitude for user: ", obj.longitude);
+                        console.log("Latitude for user: ", obj.latitude);
                         array.push({
                             username: friend_to_lookup,
-                            longitude: obj.location.longitude,
-                            latitude: obj.location.latitude
+                            longitude: obj.longitude,
+                            latitude: obj.latitude
                     
                         });
                     }

@@ -55,6 +55,9 @@ export default class NavBar extends Component {
             case 'MapPage':
                 globals.routeTo('UserPage')
                 break
+            case 'NotifPage':
+                globals.routeTo('MapPage')
+                break
             default:
                 globals.routeTo('MapPage')
                 break
@@ -67,6 +70,9 @@ export default class NavBar extends Component {
         switch (page) {
             case 'MapPage':
                 globals.routeTo('NotifPage')
+                break
+            case 'UserPage':
+                globals.routeTo('MapPage')
                 break
             default:
                 globals.routeTo('MapPage')

@@ -163,7 +163,7 @@ var get = function() {
     ////console.log(module.exports)
     AsyncStorage.multiGet(allkeys(), 
         (err, data) => {
-            console.log('[+] got a bunch of stuff successfully')
+            //console.log('[+] got a bunch of stuff successfully')
             //set all globals accordingly
             //console.log(data)
             module.exports.user = data[0][1]
@@ -207,6 +207,7 @@ module.exports = {
     notificationinterval: 2000,
     updateinterval: 2000,
     locationinterval: 2000, 
-    dumpinterval: 1000
+    dumpinterval: 1000,
+    loginwait: 1000,
 }
 

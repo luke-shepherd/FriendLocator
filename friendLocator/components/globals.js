@@ -166,16 +166,8 @@ var get = function() {
             console.log('[+] got a bunch of stuff successfully')
             //set all globals accordingly
             console.log(data)
-            for (var i = 0; i < data.length; i++) {
-                switch (data[i][0]) {
-                    case 'user':
-                        module.exports.user = data[i][1]
-                        break
-                    case 'token':
-                        module.exports.token = data[i][1]
-                        break
-                }
-            }
+            module.exports.user = data[0][0]
+            module.exports.token = data[1][1]
         })
 }
 

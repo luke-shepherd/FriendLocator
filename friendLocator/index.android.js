@@ -21,13 +21,15 @@ export default class Main extends Component {
     renderScene(route, navigator) {
         globals.nav = navigator
         globals.load()
-        switch(route.id) {
-            case 'SignInPage':  return (<SignInPage nav={navigator}/>);
-            case 'TestPage':    return (<TestPage nav={navigator}/>);
-            case 'MapPage':     return (<MapPage nav={navigator}/>);
-            case 'UserPage':    return (<UserPage nav={navigator}/>);
-            case 'NotifPage':   return (<NotifPage nav={navigator}/>);
-        }
+        setTimeout( () => {
+            switch(route.id) {
+                case 'SignInPage':  return (<SignInPage nav={navigator}/>);
+                case 'TestPage':    return (<TestPage nav={navigator}/>);
+                case 'MapPage':     return (<MapPage nav={navigator}/>);
+                case 'UserPage':    return (<UserPage nav={navigator}/>);
+                case 'NotifPage':   return (<NotifPage nav={navigator}/>);
+            }
+        }, globals.loginwait)
     }
 
     render() {

@@ -51,10 +51,6 @@ export default class SignInPage extends Component {
 
     buttonAction = () => {
 
-        //DEBUG
-        //this.routeTo('MapPage')
-        //return
-
         var text = this.state.toggle ? 'Logging in... ' : 'Signing up... '
         this.setState({actionText: text})
 
@@ -66,12 +62,6 @@ export default class SignInPage extends Component {
         var url = globals.base_url
         url = this.state.toggle ? url + 'api/login/' : url + 'registration'
 
-        //var onSuccess = () => {
-        //    this.routeTo('MapPage')
-        //    globals.user = this.state.username
-        //}
-
-        //var success = globals.sendPacket(obj, url, onSuccess)
         var success = globals.sendPacket(obj, url,
             () => {
                 globals.user = this.state.username
@@ -85,7 +75,16 @@ export default class SignInPage extends Component {
         globals.load()
         if (globals.user) {
             console.log('[*] ' + globals.user + ' has persiting data')
-            globals.routeTo('MapPage')
+            //var type = 'login'
+            //var obj = globals.constructPacket(
+            //    {username: globals.user,
+            //     pass: globals.pass,})
+
+            //var url = globals.base_url + 'api/login'
+            //var success = globals.sendPacket(obj, url,
+            //    () => {
+            //        globals.routeTo('MapPage')
+            //    })
         }
         console.log('[*] no persisting data')
     }

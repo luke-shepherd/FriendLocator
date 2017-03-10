@@ -140,12 +140,13 @@ var route = function(sceneId) {
 
 //returns key value pairs for all data in module.exports
 var allkeysandvalues = function() {
-    return [['all', 'values'], ['set', 'here']]
+    return [['user', module.exports.user], 
+            ['token', module.exports.token]]
 }
 
 //returns keys for all data in module.exports
 var allkeys = function() {
-    return ['all', 'set']
+    return ['user', 'token']
 }
 
 //sets all variables
@@ -162,7 +163,6 @@ var store = function() {
 //gets all variables
 var get = function() {
     ////console.log(module.exports)
-    keys = ['all', 'set']
     AsyncStorage.multiGet(allkeys(), 
         (err, data) => {
             //console.log('[+] got a bunch of stuff successfully')
@@ -179,6 +179,7 @@ module.exports = {
 
     //app user info
     user:           '',
+    pass:           '',
     friendslist:    [],
 
     //name of user to display on profile page
@@ -206,6 +207,6 @@ module.exports = {
     notificationinterval: 2000,
     updateinterval: 2000,
     locationinterval: 200000, 
-    dumpinterval: 2000
+    dumpinterval: 1000
 }
 

@@ -70,7 +70,6 @@ export default class MapPage extends Component {
         //persistant data storage
         setInterval( () => {
             globals.dump()
-            //globals.load()
         }, globals.dumpinterval)
 
         //check for notifications and updates

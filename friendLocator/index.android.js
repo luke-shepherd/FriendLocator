@@ -20,6 +20,7 @@ globals = require('./components/globals')
 export default class Main extends Component {
     renderScene(route, navigator) {
         globals.nav = navigator
+        globals.load()
         switch(route.id) {
             case 'SignInPage':  return (<SignInPage nav={navigator}/>);
             case 'TestPage':    return (<TestPage nav={navigator}/>);

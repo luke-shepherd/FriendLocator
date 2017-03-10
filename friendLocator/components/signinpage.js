@@ -72,13 +72,16 @@ export default class SignInPage extends Component {
 
     //if they have data skil login page
     componentDidMount() {
-        if (globals.user) {
-            console.log('[*] ' + globals.user + ' has persiting data')
-            globals.routeTo('MapPage')
-        }
-        else {
-            console.log('[*] no persisting data')
-        }
+        globals.load()
+        setTimeout ( () => {
+            if (globals.user) {
+                console.log('[*] ' + globals.user + ' has persiting data')
+                globals.routeTo('MapPage')
+            }
+            else {
+                console.log('[*] no persisting data')
+            }
+        }, globals.loginwait)
     }
 
 

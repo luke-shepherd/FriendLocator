@@ -20,16 +20,13 @@ globals = require('./components/globals')
 export default class Main extends Component {
     renderScene(route, navigator) {
         globals.nav = navigator
-        globals.load()
-        setTimeout( () => {
-            switch(route.id) {
-                case 'SignInPage':  return (<SignInPage nav={navigator}/>);
-                case 'TestPage':    return (<TestPage nav={navigator}/>);
-                case 'MapPage':     return (<MapPage nav={navigator}/>);
-                case 'UserPage':    return (<UserPage nav={navigator}/>);
-                case 'NotifPage':   return (<NotifPage nav={navigator}/>);
-            }
-        }, globals.loginwait)
+        switch(route.id) {
+            case 'SignInPage':  return (<SignInPage nav={navigator}/>);
+            case 'TestPage':    return (<TestPage nav={navigator}/>);
+            case 'MapPage':     return (<MapPage nav={navigator}/>);
+            case 'UserPage':    return (<UserPage nav={navigator}/>);
+            case 'NotifPage':   return (<NotifPage nav={navigator}/>);
+        }
     }
 
     render() {

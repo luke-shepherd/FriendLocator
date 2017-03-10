@@ -55,6 +55,10 @@ export default class SearchBar extends Component {
                 console.log('[*] search success')
             })
 
+        console.log('sendpacket return')
+        console.log(success)
+        console.log('current global var')
+        console.log(globals.searchresults)
         if (success) {
             console.log('RESULTS BEFORE SET:')
             console.log(globals.searchresults)

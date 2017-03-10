@@ -74,7 +74,7 @@ export default class MapPage extends Component {
 
         //check for notifications and updates
         setInterval( () => {
-            var obj = globals.constructPacket({user: globals.user});
+            var obj = globals.constructPacket({username: globals.user});
             var success = globals.sendPacket(obj, globals.base_url + 'api/updateUser',
                 () => {console.log('successfully updated')})
         }, globals.updateinterval)
@@ -82,7 +82,7 @@ export default class MapPage extends Component {
         //send location to server on interval
         setInterval( () => {
             if (globals.user != '') {
-                var obj = globals.constructPacket({user: globals.user,
+                var obj = globals.constructPacket({username: globals.user,
                                                    longitude: globals.userLocation.longitude,
                                                    latitude: globals.userLocation.latitude});
 

@@ -20,7 +20,7 @@ export default class SearchBar extends Component {
         )
         this.state = {
             text: '',
-            results: [],
+            results: globals.searchresults,
         }
         this.style = StyleSheet.create({
             container: {
@@ -56,16 +56,11 @@ export default class SearchBar extends Component {
             })
 
         if (success) {
-            //this.setState({results: globals.searchresults})
-            //add to list
-
             console.log('RESULTS BEFORE SET:')
             console.log(globals.searchresults)
 
             if (globals.searchresults) {
-                var temp = globals.searchresults
-                temp.push(query)
-                this.setState({results: temp})
+                this.setState({results: globals.searchresults})
             }
         } 
         else {

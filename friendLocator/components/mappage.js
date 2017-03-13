@@ -92,6 +92,7 @@ export default class MapPage extends Component {
         }, globals.locationinterval)
 
 
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({loc: JSON.stringify(position)})
@@ -124,7 +125,16 @@ export default class MapPage extends Component {
              <View style={this.style.container}>
                 <MapView style={this.style.map}
                     region={this.state.region}
-                    showsUserLocation={true}/>
+                    showsUserLocation={true}>
+                    {globals.friendlocs.map(marker => (
+                        <MapView.Marker
+                              key={marker.token}
+                              coordinate={marker.latlng}
+                              title={marker.username}
+                        />
+                    ))}
+                </MapView>
+
                 <View style={this.style.searchbar}>
                     <SearchBar/>
                 </View>

@@ -65,8 +65,13 @@ var send = function(obj, endpoint, action) {
                         module.exports.notifications = response.notifications;
                         module.exports.requests = response.requests;
                         module.exports.pending = response.pending;
+
+                        module.exports.friendslist = response.friends_list;
                         
                         //console.log('RECIEVED NOTIFICATIONS: ' + module.exports.notifications);
+
+                        //Friend coord info
+
  
                     }
                     else {
@@ -115,6 +120,9 @@ var send = function(obj, endpoint, action) {
                         //console.log(response.reason);
                         return false
                     }
+                    break
+                case 'locationRequest':
+                    console.log(response)
                     break
 
                 default:
@@ -185,14 +193,15 @@ module.exports = {
     pass:           '',
     friendslist:    [],
 
-    //name of user to display on profile page
+    //name of user to display on friend profile page
     userpage:   '',
+    userfriends: [],
 
     //pending info, should notify user if anything here
     notifications:  [],
-    searchresults: [],
     requests: [],
     pending: [],
+    searchresults: [],
 
 
     userLocation: {
@@ -200,7 +209,9 @@ module.exports = {
         longitude:  '',
     },
 
-    friendlocs: {},
+    friendlocs: [/*{token: '12312', username: 'test', latlng: {latitude: 36.95, longitude: -122.101 }}, 
+                 {token: '21321', username: 'test2', latlng: {latitude: 36.94, longitude: -122.101 }},
+                 {token: '21311', username: 'test3', latlng: {latitude: 36.94, longitude: -122.111 }}*/],
 
     //objects and methods
     nav:                '',
@@ -212,8 +223,8 @@ module.exports = {
     
     notificationinterval: 2000,
     updateinterval: 2000,
-    locationinterval: 2000, 
+    locationinterval: 20000, 
     dumpinterval: 1000,
-    loginwait: 1,
+    loginwait: 100,
 }
 

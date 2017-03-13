@@ -20,7 +20,9 @@ export default class NotifPage extends Component {
             {rowHasChanged: (r1,r2) => r1 !== r2}
         )
         this.state = {
-            data: globals.notifications.concat(globals.pending).concat(globals.requests),
+            notifications: globals.notifications,
+            pending: globals.pending,
+            requests: globals.requests,
             ntext: 'no notifications :('
         }
 
@@ -103,9 +105,9 @@ export default class NotifPage extends Component {
 
             console.log('[*] accepted: ' + notif)
             //remove row from list
-            var temp = this.state.data
-            var index = temp.indexOf(notif)
-            temp.splice(index)
+            
+            var index = globals.notifications.indexOf(notif)
+            globals.notifications.splice(index)
             //this.setState({data: temp})
 
             var url = globals.base_url + 'api/acceptFriend'
@@ -126,7 +128,7 @@ export default class NotifPage extends Component {
                 </View>
                 <View style={this.style.listcontainer}>
                     <ListView
-                        dataSource={this.ds.cloneWithRows(this.state.data)}
+                        dataSource={this.ds.cloneWithRows(this.state.requests)}
                         renderRow={(row) => 
                             <View style={this.style.row}>
                             <TouchableHighlight 
@@ -134,7 +136,7 @@ export default class NotifPage extends Component {
                                 underlayColor='#dcdcdc'
                             >
                             <Text style={this.style.rowtext}>
-                                {row}
+                                {row.concat(' has requested your location ')}
                             </Text>
                             </TouchableHighlight>
                             <Button
@@ -147,17 +149,47 @@ export default class NotifPage extends Component {
                                 title={'decline'}
                                 color='#841584'
                             />
+
+                            </View>
+                        }
+                        enableEmptySections={true}
+                    />
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(this.state.pending)}
+                        renderRow={(row) => 
+                            <View style={this.style.row}>
+                            <Text style={this.style.rowtext}>
+                                {row}
+                            </Text>
+                            </View>
+                        }
+                        enableEmptySections={true}
+                    />
+                    <ListView
+                        dataSource={this.ds.cloneWithRows(this.state.notifications)}
+                        renderRow={(row) => 
+                            <View style={this.style.row}>
+                                <Text style={this.style.rowtext}>
+                                    {row}
+                                </Text>
                             </View>
                         }
                         enableEmptySections={true}
                     />
                 </View>
                 <Text style={this.style.ntext}>
-                    {this.state.data.length == 0 ? this.state.ntext : ''}
+                    {(this.state.notifications.length == 0 && 
+                      this.state.pending.length == 0 &&
+                      this.state.requests.length == 0) ? this.state.ntext : ''}
                 </Text>
             </View>
         );
     }
 
 }
+
+/*
+
+                    
+                    */
 

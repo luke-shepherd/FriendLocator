@@ -13,6 +13,7 @@ import TestPage from './components/testpage.js';
 import SignInPage from './components/signinpage.js';
 import MapPage from './components/mappage.js';
 import UserPage from './components/userpage.js';
+import FriendPage from './components/friendpage.js';
 
 import NotifPage from './components/notifpage.js';
 globals = require('./components/globals')
@@ -26,6 +27,7 @@ export default class Main extends Component {
             case 'MapPage':     return (<MapPage nav={navigator}/>);
             case 'UserPage':    return (<UserPage nav={navigator}/>);
             case 'NotifPage':   return (<NotifPage nav={navigator}/>);
+            case 'FriendPage':  return (<FriendPage nav={navigator}/>);
         }
     }
 

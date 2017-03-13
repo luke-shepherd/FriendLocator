@@ -139,7 +139,7 @@ apiRoutes.post('/addFriend/', function(req, res){
 
    User.findOneAndUpdate({'username': friend_requested,
 			  'friends_request': { $ne: requesting_user}},
-			   {$push: {friends_request: requesting_user}},
+			   {$addToSet: {friends_request: requesting_user}},
 			   {new: true}, function(err, obj){
       if(err) return handleError(err);
       
@@ -177,7 +177,7 @@ apiRoutes.post('/acceptFriend/', function(req, res){
    
    //Update friends list of requesting user
    User.findOneAndUpdate({'username': requesting_user},
-    {$pull: {friends_request: accepting_friend}, $push: {friends_list: accepting_friend}},
+    {$pull: {friends_request: accepting_friend}, $addToSet: {friends_list: accepting_friend}},
 	{new: true}, function(err, obj){
       if(err) return handleError(err);
       
@@ -191,7 +191,7 @@ apiRoutes.post('/acceptFriend/', function(req, res){
         console.log("Friends request array: ", obj.friends_request); 
         //Update friends list of friend
         User.findOneAndUpdate({'username': accepting_friend},
-			   {$pull: {friends_pending: requesting_user} ,$push: {friends_list: requesting_user, friends_notifications: accept_notification}},
+			   {$pull: {friends_pending: requesting_user} ,$addToSet: {friends_list: requesting_user, friends_notifications: accept_notification}},
 			   {new: true}, function(err, obj){
             if(err) return handleError(err);
       
@@ -238,7 +238,7 @@ apiRoutes.post('/rejectFriend/', function(req, res){
         console.log("Friends request array: ", obj.friends_request); 
          //Update notifications list of friend
         User.findOneAndUpdate({'username': rejecting_friend},
-			{$pull: {friends_pending: requesting_user}, $push: {friends_notifications: reject_notification}},
+			{$pull: {friends_pending: requesting_user}, $addToSet: {friends_notifications: reject_notification}},
 			{new: true}, function(err, obj){
             if(err) return handleError(err);
       
@@ -306,7 +306,7 @@ apiRoutes.post('/deleteFriend/', function(req, res){
 });
 
 //Get Friends List route from Packet Notes
-apiRoutes.post('/friendpage/getlist/', function(req, res){
+apiRoutes.post('/getFriendsList/', function(req, res){
     var requesting_user = req.body.username;
     console.log("Requesting user: ", requesting_user);
     
@@ -314,11 +314,11 @@ apiRoutes.post('/friendpage/getlist/', function(req, res){
         if(err) return handleError(err);  
         console.log("User object received from query: ", obj);
         if(obj == null){
-            res.json({"type": 'response',
+            res.json({"type": 'getFriendsList',
                 "success": false,
                 "reason": 'Error: User does not exist'});
         }else{ 
-            res.json({"type": 'response',
+            res.json({"type": 'getFriendsList',
                 "success": true,
                 "reason": 'Requesting username exists',
                 "friends": obj.friends_list});
@@ -347,7 +347,8 @@ apiRoutes.post('/updateuser/', function(req, res){
                 "reason": 'Requesting user exists',
                 "notifications": obj.friends_notifications,
                 "requests": requests,
-                "pendings": pendings});
+                "pendings": pendings,
+                "friends_list": obj.friends_list});
         }
     }); 
     
@@ -562,7 +563,7 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
    
     
     console.log("Requesting user: ", requesting_user);
-    console.log("Friends viewable array: ", friends_viewable);
+   // console.log("Friends viewable array: ", friends_viewable);
 
     
     User.findOne({'username':requesting_user}, function(err, obj){
@@ -573,36 +574,45 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
                    "success": false,
                    "reason": 'User does not exist'});
         }else{
-        var array = [];
-        console.log("This is friends viewable: ", obj.friends_viewable);
-        for(var i = 0; i < obj.friends_viewable.length; i++){
-            var friend_to_lookup = obj.friends_viewable[i];
-            User.findOne({'username': friend_to_lookup}, function(err, obj){
-                if(err) return handleError(err);  
-                if(obj == null){
-                    res.json({"type": 'updateFriendsViewable',
-                        "success": false,
-                        "reason": 'User does not exist'});
-                }else{
-                    if(obj.broadcast){
-                        console.log("Pushing user into array: ", obj.username);
-                        console.log("Longitude for user: ", obj.longitude);
-                        console.log("Latitude for user: ", obj.latitude);
-                        array.push({
-                            username: friend_to_lookup,
-                            longitude: obj.longitude,
-                            latitude: obj.latitude
+            var array = [];
+       
+            console.log("This is friends viewable: ", obj.friends_viewable.length);
+            for(var i = 0; i < obj.friends_viewable.length; i++){
+                var friend_to_lookup = obj.friends_viewable[i];
+                console.log("Counter before: ", i);
+                console.log("Friend to lookup: ", friend_to_lookup);
+                User.findOne({'username': friend_to_lookup}, function(err, obj){
+                    if(err) return handleError(err);  
+                    if(obj == null){
+                        res.json({"type": 'updateFriendsViewable',
+                            "success": false,
+                            "reason": 'User does not exist'});
+                    }else{
+                        if(obj.broadcast){
+                            console.log("Counter: ", i);
+                            console.log("Pushing user into array: ", obj.username);
+                            console.log("Longitude for user: ", obj.longitude);
+                            console.log("Latitude for user: ", obj.latitude);
+                            array.push({
+                                username: friend_to_lookup,
+                                longitude: obj.longitude,
+                                latitude: obj.latitude
                     
-                        });
+                            });
+                        }   
+                        if( i == obj.friends_viewable.length ){
+                            console.log("Array at this time: ", array);
+                            res.json({"type": 'updateFriendsViewable',
+                                "success": true,
+                                "reason": 'User exists and no errors reported',
+                                "locations": array});
+                            
+                        }
+                    
+                    
                     }
-                }
-            });
-        }
-   
-        res.json({"type": 'updateFriendsViewable',
-                  "success": true,
-                  "reason": 'User exists and no errors reported',
-                  "locations": array});
+                });
+            }   
         }
    });   
     

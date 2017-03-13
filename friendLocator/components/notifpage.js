@@ -22,7 +22,7 @@ export default class NotifPage extends Component {
         this.state = {
             notifications: globals.notifications,
             pending: globals.pending,
-            requests: globals.requests,
+            requests: [],//globals.requests,
             ntext: 'no notifications :('
         }
 

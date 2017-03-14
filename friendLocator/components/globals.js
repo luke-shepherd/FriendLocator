@@ -198,8 +198,8 @@ module.exports = {
     userfriends: [],
 
     //pending info, should notify user if anything here
-    notifications:  [],
-    requests: [],
+    notifications:  ['someone accepted your request', 'you also got denied', 'thisisacrazylongnotificationsgkjdfsglkjshdfgkjshdfgkljahsdkfjhakljshgkljsdfhgkjdfgsdklfjgsdfg'],
+    requests: ['fourteenelephants', 'will', 'barack'],
     pending: [],
     searchresults: [],
 

@@ -12,6 +12,7 @@ const express = require('express'),
       WebSocket = require('ws');
       url = require('url');
       http = require('http');
+      Promise = require('bluebird');    
       //multer = require('multer');
 
 //MongoDB stuff
@@ -558,6 +559,7 @@ apiRoutes.post('/deleteLocation/', function(req, res){
 
 //Update friends viewable location 
 //ToDo: Update updatelocation method to store new location schema, Merge function with updateUser
+/*
 apiRoutes.post('/updateFriendsViewable/', function(req, res){
     var requesting_user = req.body.username;
    
@@ -617,7 +619,64 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
    });   
     
 });
+*/
 
+
+apiRoutes.post('/updateFriendsViewable/', function(req, res){
+    var requesting_user = req.body.username; 
+  
+    console.log("Requesting user: ", requesting_user);
+     
+    User.findOne({'username':requesting_user}, function(err, obj){
+        if(err) return handleError(err);
+          
+        if(obj == null){
+         res.json({"type": 'updateFriendsViewable',
+                   "success": false,
+                   "reason": 'User does not exist'});
+        }else{
+            var array = [];
+       
+            console.log("This is friends viewable: ", obj.friends_viewable.length);
+            var promises = obj.friends_viewable.map(function(friend) {
+                return User.findOne({'username': friend}, function(err, obj){
+                    if(err) return handleError(err);  
+                    if(obj == null){
+                        reject(new Error('User not exists'));
+                    }else{
+                        if(obj.broadcast){      
+                            console.log("Pushing user into array: ", friend);
+                            console.log("Longitude for user: ", obj.longitude);
+                            console.log("Latitude for user: ", obj.latitude);
+                            array.push({
+                                username: friend,
+                                longitude: obj.longitude,
+                                latitude: obj.latitude
+                    
+                            });
+                        }   
+                    }
+                });
+            });
+
+            Promise.all(promises)
+            .then(function(){ 
+                console.log("Array at this time: ", array);
+                res.json({"type": 'updateFriendsViewable',
+                          "success": true,
+                          "reason": 'User exists and no errors reported',
+                          "locations": array});
+            })
+            .error(/*{   
+                console.log("Error: ", error);            
+                res.json({"type": 'updateFriendsViewable',
+                          "success": false,
+                          "reason": 'User does not exist'});
+            }*/ console.error);
+        }
+   });   
+    
+});
 
 //Delete group route
 

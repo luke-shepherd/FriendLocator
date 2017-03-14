@@ -223,7 +223,7 @@ module.exports = {
     
     notificationinterval: 2000,
     updateinterval: 2000,
-    locationinterval: 20000, 
+    locationinterval: 2000, 
     dumpinterval: 1000,
     loginwait: 100,
 }

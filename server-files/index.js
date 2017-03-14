@@ -355,6 +355,32 @@ apiRoutes.post('/updateuser/', function(req, res){
     
 });
 
+apiRoutes.post('/removeNotification/', function(req,res){
+  var username = req.body.username
+  var notification = req.body.notification
+  console.log("Requesting user: ", username);
+  console.log("Delete notification: ", notification)
+
+  User.findOneAndUpdate({'username': username},
+    {$pull: {friends_notifications: notification}},
+    {new: true}, function(err,obj){
+
+    if (err) return handleError(err);
+
+    if(obj == null){
+      res.json({"type": "removeNotification",
+                "success": false,
+                "reason": "User does not exit"});
+    }else{
+      console.log("Updated friends_notifications", obj.friends_notifications);
+      res.json({"type" : "removeNotification",
+                "success": true,
+                "reason": "Removed notification"})
+    }
+
+  })
+})
+
 //Groups page route
 apiRoutes.post('/grouppage/', function(req, res){
     var requesting_user = req.body.name;
@@ -747,6 +773,8 @@ apiRoutes.post('/userquery', function (req, res) {
 apiRoutes.post('/search', function(req,res){
   var lookup  = req.body.lookup;
   console.log("Looking up:", lookup);
+
+
   var regex = '.*' + lookup + '.*'  
 
   User.find({$or:[
@@ -769,6 +797,7 @@ apiRoutes.post('/search', function(req,res){
                    
       });
       
+
       res.json({"type": 'search',
                 "success": true,
                 "results": searchResults});

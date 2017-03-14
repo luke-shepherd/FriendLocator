@@ -21,9 +21,11 @@ export default class NotifPage extends Component {
         )
         this.state = {
             notifications: globals.notifications,
-            pending: globals.pending,
-            requests: [],//globals.requests,
-            ntext: 'no notifications :('
+            requests: globals.requests,
+            ntext: 'no notifications :(',
+            ntitle: 'Notifications',
+            nmsg: '',
+            rmsg: ' has requested your location',
         }
 
         this.style = StyleSheet.create({
@@ -33,21 +35,29 @@ export default class NotifPage extends Component {
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',
             },
-            listcontainer: {
+            pagecontainer: {
                 flex: 1,
-                top: 60,
+                top: 70,
+                alignItems: 'center',
+                width: 600,
             },
             row: {
                 flex: 1,
                 flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                justifyContent: 'space-around',
+                //alignItems: 'center',
+            },
+            okbutton: {
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-around',
             },
             rowtext: {
-                fontSize: 15,
+                fontSize: 25,
                 textAlign: 'center',
                 marginTop: 20,
                 marginBottom: 5,
+                //color: 'grey',
             },
             navbar: {
                 position: 'absolute',
@@ -62,53 +72,59 @@ export default class NotifPage extends Component {
                 left: 100,
                 fontSize: 20,
             },
+            titletext: {
+                //flex:1,
+                //position: 'absolute',
+                //top: 300,
+                //left: 100,
+                fontSize: 50,
+                color: 'black',
+            },
+            divider: {
+                flex: 1,
+                marginTop: 20,
+                height: 3,
+                width: 999999,
+                backgroundColor: 'black',
+            }
         });
     }
 
     componentDidMount() {
         //do nothing special
-        
-
     }
 
     highlightAction(notif) {
         console.log('[*] pressed: ' + notif)
-        //route to user profile of notification (ie your friend)
-        //this.routeTo()
+        if (this.state.notifications.indexOf(notif) > -1) {
+            //if its a notification, remove row from list
+            var index = globals.notifications.indexOf(notif)
+            globals.notifications.splice(index, 1)
+            this.setState({notifications: globals.notifications})
+        }
+        //else do nothing
     }
 
     buttonAction(notif, action) {
+        //respond to the request
         if (action == 'decline') {
-            //remove notification from global variable
-            //wait for acknowledge response to perform action
-
             //remove row from list
-            var temp = this.state.data
-            var index = temp.indexOf(notif)
-            temp.splice(index)
-            //this.setState({data: temp})
+            var index = globals.requests.indexOf(notif)
+            globals.requests.splice(index, 1)
+            this.setState({requests: globals.requests})
 
             var url = globals.base_url + 'api/declineFriend'
             var obj = globals.constructPacket({username: globals.user, friend: notif})
             var success = globals.sendPacket(obj, url, 
                 () => {
-                    console.log('[+] sucess declined friend: ' + notif)
+                    console.log('[+] success declined friend: ' + notif)
                 })
         }
         else {
-            //remove notification from global variable
-            //var obj = constructPacket()
-            //var success = sendPacket(obj)
-            //wait for acknowledge response to perform action
-
-            //'api/acceptFriend'
-
-            console.log('[*] accepted: ' + notif)
             //remove row from list
-            
-            var index = globals.notifications.indexOf(notif)
-            globals.notifications.splice(index)
-            //this.setState({data: temp})
+            var index = globals.requests.indexOf(notif)
+            globals.requests.splice(index, 1)
+            this.setState({requests: globals.requests})
 
             var url = globals.base_url + 'api/acceptFriend'
             var obj = globals.constructPacket({username: globals.user, friend: notif})
@@ -120,76 +136,78 @@ export default class NotifPage extends Component {
         }
     }
 
+    buttonAction2(notif) {
+        var index = globals.notifications.indexOf(notif)
+        globals.notifications.splice(index, 1)
+        this.setState({notifications: globals.notifications})
+    }
+
+    renderif(bool, button, otherbutton) {
+        if (bool) {
+            return button
+        }
+        else {
+            return otherbutton
+        }
+    }
+
     render() {
         return (
             <View style={this.style.container}>
                 <View style={this.style.navbar}>
                     <NavBar/>
                 </View>
-                <View style={this.style.listcontainer}>
+                <View style={this.style.pagecontainer}>
+                    <Text style={this.style.titletext}>
+                        {this.state.ntitle}
+                    </Text>
                     <ListView
-                        dataSource={this.ds.cloneWithRows(this.state.requests)}
+                        dataSource={this.ds.cloneWithRows(this.state.notifications.concat(this.state.requests))}
                         renderRow={(row) => 
-                            <View style={this.style.row}>
-                            <TouchableHighlight 
-                                onPress={() => this.highlightAction(row)}
-                                underlayColor='#dcdcdc'
-                            >
-                            <Text style={this.style.rowtext}>
-                                {row.concat(' has requested your location ')}
-                            </Text>
-                            </TouchableHighlight>
-                            <Button
-                                onPress={() => this.buttonAction(row, 'accept')}
-                                title={'accept'}
-                                color='#841584'
-                            />
-                            <Button
-                                onPress={() => this.buttonAction(row, 'decline')}
-                                title={'decline'}
-                                color='#841584'
-                            />
-
-                            </View>
-                        }
-                        enableEmptySections={true}
-                    />
-                    <ListView
-                        dataSource={this.ds.cloneWithRows(this.state.pending)}
-                        renderRow={(row) => 
-                            <View style={this.style.row}>
-                            <Text style={this.style.rowtext}>
-                                {row}
-                            </Text>
-                            </View>
-                        }
-                        enableEmptySections={true}
-                    />
-                    <ListView
-                        dataSource={this.ds.cloneWithRows(this.state.notifications)}
-                        renderRow={(row) => 
-                            <View style={this.style.row}>
+                            <View>
+                                <View style={this.style.divider}></View>
+                                <TouchableHighlight 
+                                    onPress={() => this.highlightAction(row)}
+                                    underlayColor='#dcdcdc'
+                                >
                                 <Text style={this.style.rowtext}>
-                                    {row}
+                                    {(this.state.notifications.indexOf(row) > -1) ?
+                                            row.concat(this.state.nmsg) : row.concat(this.state.rmsg)}
                                 </Text>
+                                </TouchableHighlight>
+                                    {this.renderif((this.state.requests.indexOf(row) > -1),
+                                    <View style={this.style.row}>
+                                        <Button
+                                            onPress={() => this.buttonAction(row, 'accept')}
+                                            title={'accept'}
+                                            color='darkgreen'
+                                        />
+                                        <Button
+                                            onPress={() => this.buttonAction(row, 'decline')}
+                                            title={'decline'}
+                                            color='darkred'
+                                        />
+                                    </View>,
+                                    <View style={this.style.okbutton}>
+                                        <Button
+                                            onPress={() => this.buttonAction2(row)}
+                                            title={'ok'}
+                                            color='darkorange'
+                                        />
+                                    </View>
+                                    )}
                             </View>
                         }
                         enableEmptySections={true}
                     />
+                    <Text style={this.style.ntext}>
+                        {this.state.notifications.length + this.state.requests.length == 0 ? this.state.ntext : ''}
+                    </Text>
                 </View>
-                <Text style={this.style.ntext}>
-                    {(this.state.notifications.length == 0 && 
-                      this.state.pending.length == 0 &&
-                      this.state.requests.length == 0) ? this.state.ntext : ''}
-                </Text>
+
             </View>
         );
     }
 
 }
-
-/*
-
-                    
-                    */
 

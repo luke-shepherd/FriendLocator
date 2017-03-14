@@ -125,7 +125,8 @@ export default class MapPage extends Component {
              <View style={this.style.container}>
                 <MapView style={this.style.map}
                     region={this.state.region}
-                    showsUserLocation={true}>
+                    showsUserLocation={true}
+                    showsCompass={false}>
                     {globals.friendlocs.map(marker => (
                         <MapView.Marker
                               key={marker.token}

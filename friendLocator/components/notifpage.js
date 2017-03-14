@@ -22,7 +22,7 @@ export default class NotifPage extends Component {
         this.state = {
             notifications: globals.notifications,
             requests: globals.requests,
-            ntext: 'no notifications :(',
+            ntext: 'no notifications  ;(',
             ntitle: 'Notifications',
             nmsg: '',
             rmsg: ' has requested your location',
@@ -39,7 +39,7 @@ export default class NotifPage extends Component {
                 flex: 1,
                 top: 70,
                 alignItems: 'center',
-                width: 600,
+                //width: 600,
             },
             row: {
                 flex: 1,
@@ -53,7 +53,7 @@ export default class NotifPage extends Component {
                 justifyContent: 'space-around',
             },
             rowtext: {
-                fontSize: 25,
+                fontSize: 16,
                 textAlign: 'center',
                 marginTop: 20,
                 marginBottom: 5,
@@ -77,7 +77,7 @@ export default class NotifPage extends Component {
                 //position: 'absolute',
                 //top: 300,
                 //left: 100,
-                fontSize: 50,
+                fontSize: 30,
                 color: 'black',
             },
             divider: {
@@ -96,12 +96,12 @@ export default class NotifPage extends Component {
 
     highlightAction(notif) {
         console.log('[*] pressed: ' + notif)
-        if (this.state.notifications.indexOf(notif) > -1) {
-            //if its a notification, remove row from list
-            var index = globals.notifications.indexOf(notif)
-            globals.notifications.splice(index, 1)
-            this.setState({notifications: globals.notifications})
-        }
+        //if (this.state.notifications.indexOf(notif) > -1) {
+        //    //if its a notification, remove row from list
+        //    var index = globals.notifications.indexOf(notif)
+        //    globals.notifications.splice(index, 1)
+        //    this.setState({notifications: globals.notifications})
+        //}
         //else do nothing
     }
 
@@ -140,6 +140,13 @@ export default class NotifPage extends Component {
         var index = globals.notifications.indexOf(notif)
         globals.notifications.splice(index, 1)
         this.setState({notifications: globals.notifications})
+
+        var url = globals.base_url + 'api/removeNotification'
+        var obj = globals.constructPacket({username: globals.user, notification: notif})
+        var success = globals.sendPacket(obj, url, 
+            () => {
+                console.log('[+] success accepted friend: ' + notif)
+            }) 
     }
 
     renderif(bool, button, otherbutton) {
@@ -159,7 +166,7 @@ export default class NotifPage extends Component {
                 </View>
                 <View style={this.style.pagecontainer}>
                     <Text style={this.style.titletext}>
-                        {this.state.ntitle}
+                        {this.state.notifications.length + this.state.requests.length != 0 ? this.state.ntitle : this.state.ntext}
                     </Text>
                     <ListView
                         dataSource={this.ds.cloneWithRows(this.state.notifications.concat(this.state.requests))}
@@ -200,9 +207,7 @@ export default class NotifPage extends Component {
                         }
                         enableEmptySections={true}
                     />
-                    <Text style={this.style.ntext}>
-                        {this.state.notifications.length + this.state.requests.length == 0 ? this.state.ntext : ''}
-                    </Text>
+        
                 </View>
 
             </View>

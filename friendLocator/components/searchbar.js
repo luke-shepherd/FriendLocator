@@ -28,11 +28,14 @@ export default class SearchBar extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: '#F5FCFF',
+                borderRadius: 10,
+                marginTop: 10,
             },
             inputbox: {
                 height: 60,
                 width: 300,
                 fontSize: 20,
+                borderRadius: 10,
             },
             rowtext: {
                 fontSize: 20,
@@ -74,7 +77,7 @@ export default class SearchBar extends Component {
         return (
             <View style={this.style.container}>
                 <TextInput
-                    placeholder='search'
+                    placeholder='  search users'
                     style={this.style.inputbox}
                     onChangeText={(text) => this.onTextUpdate(text)}
                 />

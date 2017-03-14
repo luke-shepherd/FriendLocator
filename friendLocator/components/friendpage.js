@@ -105,19 +105,15 @@ export default class UserPage extends Component {
     }
 
     renderSendReq = function() {
-        return (
-            <View>
-                <Button
-                    onPress={this.buttonActionSend}
-                    title={'Send Location'}
-                    color='#808080'
-                />
+        if(globals.friendslist.indexOf(globals.userpage) > -1) { return (
                 <Button
                     onPress={this.buttonActionReq} 
                     title={'Request Location'}
                     color='#A9A9A9'
-                />
-            </View>)
+                />)
+        } else {
+            return 
+        }
     }
 
     render() {
@@ -146,12 +142,7 @@ export default class UserPage extends Component {
                             enableEmptySections={true}
                         />
                     </View>
-                    
-                     <Button
-                        onPress={this.buttonActionSend}
-                        title={'Send Location'}
-                        color='#841584'
-                    />    
+                    {this.renderSendReq}  
                 
                     <View style={this.style.navbar}>
                             <NavBar/>

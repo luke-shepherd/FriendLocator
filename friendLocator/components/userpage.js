@@ -25,7 +25,6 @@ const logOut = () => {
     globals.dump()
 
     setTimeout ( () => {
-
         globals.routeTo('SignInPage')
     }, 500)
 
@@ -59,7 +58,8 @@ export default class UserPage extends Component {
             },
             button: {
                 position: 'absolute',
-                top: 50,
+                top: 10,
+                bottom: 150,
                 left: 120,
                 right: 150,
             },
@@ -101,9 +101,8 @@ export default class UserPage extends Component {
         //this.routeTo()
         globals.userpage = friend
         setTimeout ( () => {
-
-        globals.routeTo('FriendPage')
-    }, 500)
+            globals.routeTo('FriendPage')
+        }, 500)
 
     }
 
@@ -112,17 +111,18 @@ export default class UserPage extends Component {
     render() {
         return (
                 <View style={this.style.container}>
+                    <View style={this.style.navbar}>
+                        <NavBar/>
+                    </View>
                     <Text style = {this.style.text}>
                         {globals.user}
                     </Text>
                     <Image style={this.style.circle}
                            source={require('./assets/stock_prof_pic.jpg')}/>
 
-                    <Button style = {this.style.button}
-                            onPress={logOut}
-                            title='Log Out'/>
+
                     <Text style = {this.style.rowtext}>
-                        Friends:
+                        {globals.friendslist.length == 0 ? 'No Friends :(' : 'Friends:'}
                     </Text>
 
                     <View style={this.style.listcontainer}>
@@ -143,12 +143,15 @@ export default class UserPage extends Component {
                             enableEmptySections={true}
                         />
                     </View>    
-                
-                    <View style={this.style.navbar}>
-                        <NavBar/>
-                    </View>
                 </View>
                );
     }
 
 }
+
+/*
+<Button style = {this.style.button}
+                            onPress={logOut}
+                            color="#808080"
+                            title='Log Out'
+                            top='10'/> */

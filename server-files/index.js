@@ -328,32 +328,6 @@ apiRoutes.post('/getFriendsList/', function(req, res){
     
 });
 
-//Update user route from Packet Notes
-apiRoutes.post('/updateuser/', function(req, res){
-    var requesting_user = req.body.username;
-    console.log("Requesting user: ", requesting_user);
-    
-    User.findOne({'username': requesting_user}, function(err,obj){
-        if(err) return handleError(err);    
-        console.log("User object received from query: ", obj);
-        if(obj == null){
-            res.json({"type": 'updateUser',
-                "success": false,
-                "reason": 'Error: User does not exist'});
-        }else{ 
-           var pendings = obj.friends_pending.concat(obj.locations_pending);
-           var requests = obj.friends_request.concat(obj.location_requests);
-            res.json({"type": 'updateUser',
-                "success": true,
-                "reason": 'Requesting user exists',
-                "notifications": obj.friends_notifications,
-                "requests": requests,
-                "pendings": pendings,
-                "friends_list": obj.friends_list});
-        }
-    }); 
-    
-});
 
 apiRoutes.post('/removeNotification/', function(req,res){
   var username = req.body.username
@@ -646,9 +620,36 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
     
 });
 */
+/*
+//Update user route from Packet Notes
+apiRoutes.post('/updateuser/', function(req, res){
+    var requesting_user = req.body.username;
+    console.log("Requesting user: ", requesting_user);
+    
+    User.findOne({'username': requesting_user}, function(err,obj){
+        if(err) return handleError(err);    
+        console.log("User object received from query: ", obj);
+        if(obj == null){
+            res.json({"type": 'updateUser',
+                "success": false,
+                "reason": 'Error: User does not exist'});
+        }else{ 
+           var pendings = obj.friends_pending.concat(obj.locations_pending);
+           var requests = obj.friends_request.concat(obj.location_requests);
+            res.json({"type": 'updateUser',
+                "success": true,
+                "reason": 'Requesting user exists',
+                "notifications": obj.friends_notifications,
+                "requests": requests,
+                "pendings": pendings,
+                "friends_list": obj.friends_list});
+        }
+    }); 
+    
+});
+*/
 
-
-apiRoutes.post('/updateFriendsViewable/', function(req, res){
+apiRoutes.post('/updateuser/', function(req, res){
     var requesting_user = req.body.username; 
   
     console.log("Requesting user: ", requesting_user);
@@ -657,7 +658,7 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
         if(err) return handleError(err);
           
         if(obj == null){
-         res.json({"type": 'updateFriendsViewable',
+         res.json({"type": 'updateUser',
                    "success": false,
                    "reason": 'User does not exist'});
         }else{
@@ -676,9 +677,10 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
                             console.log("Longitude for user: ", obj.longitude);
                             console.log("Latitude for user: ", obj.latitude);
                             array.push({
+                                token: friend,
                                 username: friend,
-                                longitude: obj.longitude,
-                                latitude: obj.latitude
+                                latlng: {longitude: obj.longitude,
+                                         latitude: obj.latitude}
                     
                             });
                             names.push({username: friend});
@@ -689,12 +691,18 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
 
             Promise.all(promises)
             .then(function(){ 
+                var pendings = obj.friends_pending.concat(obj.locations_pending);
+                var requests = obj.friends_request.concat(obj.location_requests);
                 console.log("Array at this time: ", array);
-                res.json({"type": 'updateFriendsViewable',
+                res.json({"type": 'updateUser',
                           "success": true,
                           "reason": 'User exists and no errors reported',
-                          "locations": array}
-                          "names":names);
+                          "notifications": obj.friends_notifications,
+                          "requests": requests,
+                          "pendings": pendings,
+                          "friends_list": obj.friends_list,
+                          "locations": array,
+                          "names":names});
             })
             .error(/*{   
                 console.log("Error: ", error);            

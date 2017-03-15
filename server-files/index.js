@@ -662,6 +662,7 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
                    "reason": 'User does not exist'});
         }else{
             var array = [];
+            var names = [];
        
             console.log("This is friends viewable: ", obj.friends_viewable.length);
             var promises = obj.friends_viewable.map(function(friend) {
@@ -680,6 +681,7 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
                                 latitude: obj.latitude
                     
                             });
+                            names.push({username: friend});
                         }   
                     }
                 });
@@ -691,7 +693,8 @@ apiRoutes.post('/updateFriendsViewable/', function(req, res){
                 res.json({"type": 'updateFriendsViewable',
                           "success": true,
                           "reason": 'User exists and no errors reported',
-                          "locations": array});
+                          "locations": array}
+                          "names":names);
             })
             .error(/*{   
                 console.log("Error: ", error);            

@@ -20,8 +20,8 @@ export default class NotifPage extends Component {
             {rowHasChanged: (r1,r2) => r1 !== r2}
         )
         this.state = {
-            notifications: globals.notifications,
-            requests: globals.requests,
+            notifications: ['Jeff! has accepted your friend request'],//globals.notifications,
+            requests: ['Jimmy Boy', 'Carrot', 'John Cena'],//globals.requests,
             ntext: 'no notifications  ;(',
             ntitle: 'Notifications',
             nmsg: '',

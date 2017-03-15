@@ -64,7 +64,7 @@ var send = function(obj, endpoint, action) {
                         //console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
                         module.exports.notifications = response.notifications;
                         module.exports.requests = response.requests;
-                        module.exports.pending = response.pending;
+                        module.exports.pending = response.pendings;
 
                         module.exports.friendslist = response.friends_list;
                         
@@ -107,8 +107,15 @@ var send = function(obj, endpoint, action) {
                     //console.log('[*] decline friend:');
                     break
 
+                case 'removeNotification':
+                    if (response.success) {
+                        console.log('removed notification')
+                    }
+
                 case 'search':
                     if (response.success) {
+                        console.log('Search results')
+                        console.log(response)
                         if (!response.results) {
                             module.exports.searchresults = ['no results :(']
                         }
@@ -201,8 +208,8 @@ module.exports = {
     userfriends: [],
 
     //pending info, should notify user if anything here
-    notifications:  ['someone accepted your request', 'you also got denied', 'thisisacrazylongnotificationsgkjdfsglkjshdfgkjshdfgkljahsdkfjhakljshgkljsdfhgkjdfgsdklfjgsdfg'],
-    requests: ['fourteenelephants', 'will', 'barack', 'john', 'jacob'],
+    notifications:  [],
+    requests: [],
     pending: [],
     searchresults: [],
 
@@ -226,8 +233,10 @@ module.exports = {
     
     notificationinterval: 2000,
     updateinterval: 2000,
-    locationinterval: 20000, 
+    locationinterval: 2000, 
     dumpinterval: 1000,
     loginwait: 100,
+
+    loops: true,
 }
 

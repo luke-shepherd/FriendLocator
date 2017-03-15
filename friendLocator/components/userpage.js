@@ -25,7 +25,6 @@ const logOut = () => {
     globals.dump()
 
     setTimeout ( () => {
-
         globals.routeTo('SignInPage')
     }, 500)
 
@@ -59,12 +58,19 @@ export default class UserPage extends Component {
             },
             button: {
                 position: 'absolute',
-                top: 50,
+                top: 10,
+                bottom: 150,
                 left: 120,
                 right: 150,
             },
             listcontainer: {
                 flex: 1,
+            },
+            friendstext: {
+                fontSize: 20,
+                textAlign: 'center',
+                marginBottom: 5,
+                marginTop: 10,
             },
             row: {
                 flexDirection: 'row',
@@ -101,28 +107,33 @@ export default class UserPage extends Component {
         //this.routeTo()
         globals.userpage = friend
         setTimeout ( () => {
-
-        globals.routeTo('FriendPage')
-    }, 500)
+            globals.routeTo('FriendPage')
+        }, 500)
 
     }
 
 
+    componentDidMount() {
+        var obj = globals.constructPacket({username: globals.user});
+        var success = globals.sendPacket(obj, globals.base_url + 'api/updateUser',
+                    () => {console.log('successfully updated user notifications etc')})
+    }
 
     render() {
         return (
                 <View style={this.style.container}>
+                    <View style={this.style.navbar}>
+                        <NavBar/>
+                    </View>
                     <Text style = {this.style.text}>
                         {globals.user}
                     </Text>
                     <Image style={this.style.circle}
                            source={require('./assets/stock_prof_pic.jpg')}/>
 
-                    <Button style = {this.style.button}
-                            onPress={logOut}
-                            title='Log Out'/>
-                    <Text style = {this.style.rowtext}>
-                        Friends:
+
+                    <Text style = {this.style.friendstext}>
+                        {globals.friendslist.length == 0 ? 'No Friends :(' : 'Friends:'}
                     </Text>
 
                     <View style={this.style.listcontainer}>
@@ -143,12 +154,15 @@ export default class UserPage extends Component {
                             enableEmptySections={true}
                         />
                     </View>    
-                
-                    <View style={this.style.navbar}>
-                        <NavBar/>
-                    </View>
                 </View>
                );
     }
 
 }
+
+/*
+<Button style = {this.style.button}
+                            onPress={logOut}
+                            color="#808080"
+                            title='Log Out'
+                            top='10'/> */

@@ -24,6 +24,7 @@ export default class MapPage extends Component {
                 longitude: -122.03, //parseInt(globals.userLocation.longitude, 10),
                 longitudeDelta: 0.1
             },
+            friends: globals.friendlocs,
 
             user: 'nouser',
         }
@@ -68,6 +69,13 @@ export default class MapPage extends Component {
     componentDidMount() {
         
         if(globals.loops) {
+        
+                //keep map updated
+                setInterval( () => {
+                if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
+                    this.setState({friends: globals.friendlocs})
+                }
+                }, globals.updateinterval)
             
             //persistant data storage
             setInterval( () => {
@@ -117,13 +125,6 @@ export default class MapPage extends Component {
         )
     }
 
-    /*updateFriendsViewable endpoint {
-        'type': 'updateFriendsViewable'
-        'locations': [{'longitude': , 'latitude': , 'username': }]
-    }
-
-
-*/
     render() {
         return (
              <View style={this.style.container}>
@@ -131,7 +132,7 @@ export default class MapPage extends Component {
                     region={this.state.region}
                     showsUserLocation={true}
                     showsCompass={false}>
-                    {globals.friendlocs.map(marker => (
+                    {this.state.friends.map(marker => (
                         <MapView.Marker
                               key={marker.token}
                               coordinate={marker.latlng}

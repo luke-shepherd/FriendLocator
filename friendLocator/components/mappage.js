@@ -72,9 +72,9 @@ export default class MapPage extends Component {
         
                 //keep map updated
                 setInterval( () => {
-                if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
-                    this.setState({friends: globals.friendlocs})
-                }
+                    if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
+                        this.setState({friends: globals.friendlocs})
+                    }
                 }, globals.updateinterval)
             
             //persistant data storage
@@ -107,17 +107,21 @@ export default class MapPage extends Component {
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                this.setState({loc: JSON.stringify(position)})
-                globals.userLocation.latitude = position.coords.latitude;
-                globals.userLocation.longitude = position.coords.longitude;
+                globals.userLocation.longitude = position.coords.longitude
+                globals.userLocation.latitude = position.coords.latitude
+                if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
+                    this.setState({loc: JSON.stringify(position)})
+                    globals.userLocation.latitude = position.coords.latitude;
+                    globals.userLocation.longitude = position.coords.longitude;
 
-                this.setState({region: {  
-                                latitude: parseFloat(position.coords.latitude),
-                                latitudeDelta: 0.1,
-                                longitude: parseFloat(position.coords.longitude),
-                                longitudeDelta: 0.1,
-                               }}
-                );
+                    this.setState({region: {  
+                                    latitude: parseFloat(position.coords.latitude),
+                                    latitudeDelta: 0.1,
+                                    longitude: parseFloat(position.coords.longitude),
+                                    longitudeDelta: 0.1,
+                                   }}
+                    );
+                }
 
                 console.log(this.state.loc)
             }, (error) => console.log(JSON.stringify(error)),

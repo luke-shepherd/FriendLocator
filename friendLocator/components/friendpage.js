@@ -23,7 +23,8 @@ export default class UserPage extends Component {
             {rowHasChanged: (r1,r2) => r1 !== r2}
         );
         this.state = {
-            data: ['friend1', 'friend2'],
+            data: ['friend1', 'friend2', 'friend', 'friendslist'],
+            reqsent: globals.pending.indexOf(globals.userpage),
         }
         this.style = StyleSheet.create({
             container: {
@@ -31,7 +32,13 @@ export default class UserPage extends Component {
                 flexDirection: 'column', 
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                backgroundColor: '#F5FCFF',
+                backgroundColor: '#FFB266',
+            },
+            friendstext: {
+                fontSize: 20,
+                textAlign: 'center',
+                marginBottom: 5,
+                marginTop: 10,
             },
             text: {
                 fontSize: 20,
@@ -41,6 +48,7 @@ export default class UserPage extends Component {
             },
             listcontainer: {
                 flex: 1,
+                marginTop: 10,
             },
             row: {
                 flexDirection: 'row',
@@ -64,7 +72,7 @@ export default class UserPage extends Component {
                 width: 200,
                 justifyContent: 'center',
                 borderRadius: 50,
-                backgroundColor: '#F5FCFF',
+                backgroundColor: '#FFB266',
                 marginTop: 30,
                 marginBottom: 20,
             },
@@ -73,16 +81,20 @@ export default class UserPage extends Component {
     }
 
     buttonActionReq = () => {
+
+        if (this.state.reqsent < 0) {
         
-        var obj = globals.constructPacket({
-            username: globals.user,
-            friend: globals.userpage,
-        })
-        var url = globals.base_url + 'api/requestLocation'
-        var success = globals.sendPacket(obj, url, () => {console.log('request location sent')})
+            var obj = globals.constructPacket({
+                username: globals.user,
+                friend: globals.userpage,
+            })
+            var url = globals.base_url + 'api/requestLocation'
+            var success = globals.sendPacket(obj, url, () => {console.log('request location sent')})
 
-        console.log('Request Button Pressed');
+            console.log('Request Button Pressed');
 
+            this.setState({reqsent: 1})
+        }
     
     }
 
@@ -99,20 +111,43 @@ export default class UserPage extends Component {
         console.log('Send Button Pressed');
     }
 
+    buttonAddFriend = () => {
+
+    }
+
+
 
     routeTo(sceneId) {
         this.props.nav.replace({id: sceneId});
     }
 
     renderSendReq = function() {
-        if(globals.friendslist.indexOf(globals.userpage) > -1) { return (
-                <Button
-                    onPress={this.buttonActionReq} 
-                    title={'Request Location'}
-                    color='#A9A9A9'
-                />)
+        if(globals.friendslist.indexOf(globals.userpage) > -1) { 
+            if (this.state.reqsent > -1) {
+                return (
+                    <Button
+                        onPress={this.buttonActionSend}
+                        title={'Request Sent!'}
+                        color='#A9A9A9'
+                    />
+                )
+            } else {
+                return (
+                    <Button
+                        onPress={this.buttonActionReq} 
+                        title={'Request Location'}
+                        color='#A9A9A9'
+                    />
+                )
+            }   
         } else {
-            return 
+            return (
+                <Button
+                    onPress={this.buttonAddFriend} 
+                    title={'+ Add Friend'}
+                    color='#A9A9A9'
+                />
+            )
         }
     }
 
@@ -124,7 +159,10 @@ export default class UserPage extends Component {
                     </Text>
                     <Image style={this.style.circle}
                            source={require('./assets/stock_prof_pic.jpg')}/>
-
+                    {this.renderSendReq()}  
+                    <Text style = {this.style.friendstext}>
+                        {globals.friendslist.length == 0 ? 'No Friends :(' : 'Friends:'}
+                    </Text>
                     <View style={this.style.listcontainer}>
                         <ListView
                             dataSource={this.ds.cloneWithRows(this.state.data)}
@@ -142,10 +180,9 @@ export default class UserPage extends Component {
                             enableEmptySections={true}
                         />
                     </View>
-                    {this.renderSendReq}  
                 
                     <View style={this.style.navbar}>
-                            <NavBar/>
+                        <NavBar/>
                     </View>
                 </View>
                );

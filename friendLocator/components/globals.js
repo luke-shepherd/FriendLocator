@@ -64,7 +64,7 @@ var send = function(obj, endpoint, action) {
                         //console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
                         module.exports.notifications = response.notifications;
                         module.exports.requests = response.requests;
-                        module.exports.pending = response.pending;
+                        module.exports.pending = response.pendings;
 
                         module.exports.friendslist = response.friends_list;
                         
@@ -233,5 +233,7 @@ module.exports = {
     locationinterval: 2000, 
     dumpinterval: 1000,
     loginwait: 100,
+
+    loops: true,
 }
 

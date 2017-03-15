@@ -66,6 +66,12 @@ export default class UserPage extends Component {
             listcontainer: {
                 flex: 1,
             },
+            friendstext: {
+                fontSize: 20,
+                textAlign: 'center',
+                marginBottom: 5,
+                marginTop: 10,
+            },
             row: {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -107,6 +113,11 @@ export default class UserPage extends Component {
     }
 
 
+    componentDidMount() {
+        var obj = globals.constructPacket({username: globals.user});
+        var success = globals.sendPacket(obj, globals.base_url + 'api/updateUser',
+                    () => {console.log('successfully updated user notifications etc')})
+    }
 
     render() {
         return (
@@ -121,7 +132,7 @@ export default class UserPage extends Component {
                            source={require('./assets/stock_prof_pic.jpg')}/>
 
 
-                    <Text style = {this.style.rowtext}>
+                    <Text style = {this.style.friendstext}>
                         {globals.friendslist.length == 0 ? 'No Friends :(' : 'Friends:'}
                     </Text>
 

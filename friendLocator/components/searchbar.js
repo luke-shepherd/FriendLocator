@@ -20,7 +20,7 @@ export default class SearchBar extends Component {
         )
         this.state = {
             text: '',
-            results: globals.searchresults,
+            results: [],
         }
         this.style = StyleSheet.create({
             container: {
@@ -61,6 +61,8 @@ export default class SearchBar extends Component {
         //this is redundant
         if (!globals.searchresults) {
             globals.searchresults = ['no results :(']
+        } else {
+            this.setState({results: globals.searchresults})
         }
     }
     

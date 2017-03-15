@@ -67,31 +67,35 @@ export default class MapPage extends Component {
 
     componentDidMount() {
         
-        //persistant data storage
-        setInterval( () => {
-            globals.dump()
-        }, globals.dumpinterval)
+        if(globals.loops) {
+            
+            //persistant data storage
+            setInterval( () => {
+                globals.dump()
+            }, globals.dumpinterval)
 
-        //check for notifications and updates
-        setInterval( () => {
-            var obj = globals.constructPacket({username: globals.user});
-            var success = globals.sendPacket(obj, globals.base_url + 'api/updateUser',
-                () => {console.log('successfully updated user notifications etc')})
-        }, globals.updateinterval)
+            //check for notifications and updates
+            setInterval( () => {
+                var obj = globals.constructPacket({username: globals.user});
+                var success = globals.sendPacket(obj, globals.base_url + 'api/updateUser',
+                    () => {console.log('successfully updated user notifications etc')})
+            }, globals.updateinterval)
 
-        //send location to server on interval
-        setInterval( () => {
-            if (globals.user != '') {
-                var obj = globals.constructPacket({username: globals.user,
-                                                   longitude: globals.userLocation.longitude,
-                                                   latitude: globals.userLocation.latitude});
+            //send location to server on interval
+            setInterval( () => {
+                if (globals.user != '') {
+                    var obj = globals.constructPacket({username: globals.user,
+                                                       longitude: globals.userLocation.longitude,
+                                                       latitude: globals.userLocation.latitude});
 
-                var endpoint = globals.base_url + 'api/updateloc'
-                var success = globals.sendPacket(obj, endpoint, () => {console.log('successfully updated location to db')})
-            }
-        }, globals.locationinterval)
+                    var endpoint = globals.base_url + 'api/updateloc'
+                    var success = globals.sendPacket(obj, endpoint, () => {console.log('successfully updated location to db')})
+                }
+            }, globals.locationinterval)
 
+            globals.loops = false
 
+        }
 
         navigator.geolocation.getCurrentPosition(
             (position) => {

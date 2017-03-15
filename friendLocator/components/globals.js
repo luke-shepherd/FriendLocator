@@ -68,7 +68,8 @@ var send = function(obj, endpoint, action) {
 
                         module.exports.friendslist = response.friends_list;
                         
-                        //console.log('RECIEVED NOTIFICATIONS: ' + module.exports.notifications);
+                        module.exports.friendlocs = response.locations 
+                        console.log('RECIEVED LOCATIONS: ' + response.locations);
 
                         //Friend coord info
 
@@ -122,7 +123,9 @@ var send = function(obj, endpoint, action) {
                     }
                     break
                 case 'locationRequest':
-                    console.log(response)
+                    //if (response.success) {
+                        //{token: '21321', username: 'test2', latlng: {latitude: 36.94, longitude: -122.101 }},
+                    //}
                     break
 
                 default:
@@ -199,7 +202,7 @@ module.exports = {
 
     //pending info, should notify user if anything here
     notifications:  ['someone accepted your request', 'you also got denied', 'thisisacrazylongnotificationsgkjdfsglkjshdfgkjshdfgkljahsdkfjhakljshgkljsdfhgkjdfgsdklfjgsdfg'],
-    requests: ['fourteenelephants', 'will', 'barack'],
+    requests: ['fourteenelephants', 'will', 'barack', 'john', 'jacob'],
     pending: [],
     searchresults: [],
 

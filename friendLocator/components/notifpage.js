@@ -39,7 +39,7 @@ export default class NotifPage extends Component {
                 flex: 1,
                 top: 70,
                 alignItems: 'center',
-                width: 600,
+                //width: 600,
             },
             row: {
                 flex: 1,

@@ -22,6 +22,7 @@ const logOut = () => {
     //app user info
     globals.pass = '';
     globals.friendslist = [];
+    globals.friendlocs = [],
     globals.dump()
 
     setTimeout ( () => {
@@ -48,13 +49,14 @@ export default class UserPage extends Component {
                 flexDirection: 'column', 
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                backgroundColor: '#F5FCFF',
+                backgroundColor: '#C5C1AA',
             },
-            text: {
-                fontSize: 20,
+            title: {
+                fontSize: 40,
                 textAlign: 'center',
                 marginBottom: 20,
                 marginTop: 100,
+                color: '#222222',
             },
             button: {
                 position: 'absolute',
@@ -71,6 +73,7 @@ export default class UserPage extends Component {
                 textAlign: 'center',
                 marginBottom: 5,
                 marginTop: 10,
+                textDecorationLine: 'underline',
             },
             row: {
                 flexDirection: 'row',
@@ -94,8 +97,8 @@ export default class UserPage extends Component {
                 width: 200,
                 justifyContent: 'center',
                 borderRadius: 100,
-                backgroundColor: '#F5FCFF',
-                marginTop: 30,
+                backgroundColor: '#C5C1AA',
+                marginTop: 10,
                 marginBottom: 20,
             },
 
@@ -125,7 +128,7 @@ export default class UserPage extends Component {
                     <View style={this.style.navbar}>
                         <NavBar/>
                     </View>
-                    <Text style = {this.style.text}>
+                    <Text style = {this.style.title}>
                         {globals.user}
                     </Text>
                     <Image style={this.style.circle}

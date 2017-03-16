@@ -27,6 +27,7 @@ export default class NotifPage extends Component {
             ntitle: 'Notifications',
             nmsg: '',
             rmsg: ' has requested your location',
+            tmsg: ' has requested your friendship',
         }
 
         this.style = StyleSheet.create({
@@ -114,12 +115,24 @@ export default class NotifPage extends Component {
             globals.requests.splice(index, 1)
             this.setState({requests: globals.requests})
 
-            var url = globals.base_url + 'api/declineFriend'
-            var obj = globals.constructPacket({username: globals.user, friend: notif})
-            var success = globals.sendPacket(obj, url, 
-                () => {
-                    console.log('[+] success declined friend: ' + notif)
-                })
+            if (globals.dumbestvariableever.indexOf(notif) > -1) {
+
+                var url = globals.base_url + 'api/declineFriend'
+                var obj = globals.constructPacket({username: globals.user, friend: notif})
+                var success = globals.sendPacket(obj, url, 
+                    () => {
+                        console.log('[+] success declined friend: ' + notif)
+                    })
+            }
+            else {
+                //this is accept location
+                var url = globals.base_url + 'api/acceptLocation'
+                var obj = globals.constructPacket({username: globals.user, friend: notif})
+                var success = globals.sendPacket(obj, url, 
+                    () => {
+                        console.log('[+] success location accept: ' + notif)
+                    })
+            }
         }
         else {
             //remove row from list
@@ -127,13 +140,26 @@ export default class NotifPage extends Component {
             globals.requests.splice(index, 1)
             this.setState({requests: globals.requests})
 
-            var url = globals.base_url + 'api/acceptFriend'
-            var obj = globals.constructPacket({username: globals.user, friend: notif})
-            var success = globals.sendPacket(obj, url, 
-                () => {
-                    console.log('[+] success accepted friend: ' + notif)
-                    globals.friendslist.append(notif)
-                })
+
+            if (globals.dumbestvariableever.indexOf(notif) > -1) {
+                var url = globals.base_url + 'api/acceptFriend'
+                var obj = globals.constructPacket({username: globals.user, friend: notif})
+                var success = globals.sendPacket(obj, url, 
+                    () => {
+                        console.log('[+] success accepted friend: ' + notif)
+                        globals.friendslist.append(notif)
+                    })
+            }
+            else {
+                //this is decline location
+                var url = globals.base_url + 'api/declineLocation'
+                var obj = globals.constructPacket({username: globals.user, friend: notif})
+                var success = globals.sendPacket(obj, url, 
+                    () => {
+                        console.log('[+] success declined location: ' + notif)
+                    })
+
+            }
         }
     }
 
@@ -149,6 +175,7 @@ export default class NotifPage extends Component {
                 console.log('[+] success accepted friend: ' + notif)
             }) 
     }
+
 
     renderif(bool, button, otherbutton) {
         if (bool) {
@@ -180,7 +207,9 @@ export default class NotifPage extends Component {
                                 >
                                 <Text style={this.style.rowtext}>
                                     {(this.state.notifications.indexOf(row) > -1) ?
-                                            row.concat(this.state.nmsg) : row.concat(this.state.rmsg)}
+                                            row.concat(this.state.nmsg) : 
+                                            ((globals.dumbestvariableever.indexOf(row) > -1) ? row.concat(this.state.tmsg) 
+                                            : row.concat(this.state.rmsg))}
                                 </Text>
                                 </TouchableHighlight>
                                     {this.renderif((this.state.requests.indexOf(row) > -1),

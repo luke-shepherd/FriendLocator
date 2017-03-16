@@ -63,9 +63,12 @@ var send = function(obj, endpoint, action) {
                         console.log(response)
                         //console.log('CURRENT NOTIFICATIONS: ' + module.exports.notifications);
                         module.exports.notifications = response.notifications;
-                        module.exports.requests = response.requests;
-                        module.exports.pending = response.pendings;
 
+                        module.exports.dumbestvariableever = response.friends_request;
+                        module.exports.requests = response.friends_request.concat(response.location_requests);
+
+                        module.exports.pending = response.pendings;
+                        module.exports.friendpending = response.friend_pendings;
                         module.exports.friendslist = response.friends_list;
                         
                         module.exports.friendlocs = response.locations 
@@ -84,6 +87,9 @@ var send = function(obj, endpoint, action) {
 
                 case 'registration':
                     //console.log('signing user up')
+                    if (response.success) {
+                        globals.token = response.token
+                    }
                     break
 
                 case 'updateloc':
@@ -210,7 +216,9 @@ module.exports = {
     //pending info, should notify user if anything here
     notifications:  [],
     requests: [],
+    dumbestvariableever: [],
     pending: [],
+    friendpending: [],
     searchresults: [],
 
 
@@ -219,9 +227,7 @@ module.exports = {
         longitude:  '',
     },
 
-    friendlocs: [/*{token: '12312', username: 'test', latlng: {latitude: 36.95, longitude: -122.101 }}, 
-                 {token: '21321', username: 'test2', latlng: {latitude: 36.94, longitude: -122.101 }},
-                 {token: '21311', username: 'test3', latlng: {latitude: 36.94, longitude: -122.111 }}*/],
+    friendlocs: [/*{token: '', username: '', latlng: {latitude: '', longitude: ''}}*/],
 
     //objects and methods
     nav:                '',

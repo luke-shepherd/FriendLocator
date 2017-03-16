@@ -19,9 +19,9 @@ export default class MapPage extends Component {
         super(props);
         this.state = {
             region: {  
-                latitude: 36.97, //parseInt(globals.userLocation.latitude, 10),
+                latitude: 0, //parseInt(globals.userLocation.latitude, 10),
                 latitudeDelta: 0.1,
-                longitude: -122.03, //parseInt(globals.userLocation.longitude, 10),
+                longitude: 0, //parseInt(globals.userLocation.longitude, 10),
                 longitudeDelta: 0.1
             },
             friends: globals.friendlocs,
@@ -70,12 +70,12 @@ export default class MapPage extends Component {
         
         if(globals.loops) {
         
-                //keep map updated
-                setInterval( () => {
-                    if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
-                        this.setState({friends: globals.friendlocs})
-                    }
-                }, globals.updateinterval)
+            //keep map updated
+            setInterval( () => {
+                if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
+                    this.state.friends = globals.friendlocs
+                }
+            }, globals.updateinterval)
             
             //persistant data storage
             setInterval( () => {
@@ -110,7 +110,7 @@ export default class MapPage extends Component {
                 globals.userLocation.longitude = position.coords.longitude
                 globals.userLocation.latitude = position.coords.latitude
                 if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
-                    this.setState({loc: JSON.stringify(position)})
+
                     globals.userLocation.latitude = position.coords.latitude;
                     globals.userLocation.longitude = position.coords.longitude;
 
@@ -127,6 +127,10 @@ export default class MapPage extends Component {
             }, (error) => console.log(JSON.stringify(error)),
             {enableHighAccuracy: true, timeout: 20000}
         )
+    }
+
+    onRegionChange(region) {
+        this.setState({ region });
     }
 
     render() {

@@ -38,6 +38,13 @@ export default class SignInPage extends Component {
                 marginTop: 20,
                 marginBottom: 5,
             },
+            tryagaintext: {
+                fontSize: 20,
+                textAlign: 'center',
+                marginTop: 20,
+                marginBottom: 5,
+                color: 'red'
+            },
             inputbox: {
                 height: 60,
                 width: 300,
@@ -52,8 +59,11 @@ export default class SignInPage extends Component {
 
     buttonAction = () => {
 
-        var text = this.state.toggle ? 'Logging in... ' : 'Signing up... '
-        this.setState({actionText: text})
+        setTimeout( () => {
+        if (globals.nav.getCurrentRoutes()[0].id == 'SignInPage' && this.state.toggle) {
+            var text = 'Incorrect Username or Password ;('
+            this.setState({actionText: text})
+        }}, 1500)
 
         var type = this.state.toggle ? 'signup' : 'login'
         var obj = globals.constructPacket(
@@ -120,6 +130,9 @@ export default class SignInPage extends Component {
                         title={this.state.toggle ? 'Log In' : 'Sign Up'}
                         color='#841584'
                     />
+                    <Text style={this.style.tryagaintext}>
+                        {this.state.actionText}
+                    </Text>
                 </View>
             );
         }

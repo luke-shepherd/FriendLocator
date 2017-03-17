@@ -135,6 +135,9 @@ var send = function(obj, endpoint, action) {
                         return false
                     }
                     break
+                case 'acceptLocation':
+                    console.log('LOCATION ACCEPTED')
+                    break
                 case 'locationRequest':
                     //if (response.success) {
                         //{token: '21321', username: 'test2', latlng: {latitude: 36.94, longitude: -122.101 }},
@@ -221,6 +224,7 @@ module.exports = {
     friendpending: [],
     searchresults: [],
 
+    intervals: [],
 
     userLocation: {
         latitude:   '',

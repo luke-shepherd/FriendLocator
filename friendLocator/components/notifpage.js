@@ -126,7 +126,7 @@ export default class NotifPage extends Component {
             }
             else {
                 //this is accept location
-                var url = globals.base_url + 'api/acceptLocation'
+                var url = globals.base_url + 'api/declineLocation'
                 var obj = globals.constructPacket({username: globals.user, friend: notif})
                 var success = globals.sendPacket(obj, url, 
                     () => {
@@ -152,7 +152,7 @@ export default class NotifPage extends Component {
             }
             else {
                 //this is decline location
-                var url = globals.base_url + 'api/declineLocation'
+                var url = globals.base_url + 'api/acceptLocation'
                 var obj = globals.constructPacket({username: globals.user, friend: notif})
                 var success = globals.sendPacket(obj, url, 
                     () => {

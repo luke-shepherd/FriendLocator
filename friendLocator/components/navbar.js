@@ -20,10 +20,14 @@ const logOut = () => {
     globals.friendslist = [];
     globals.dump()
 
+    for (var i = 0; i < globals.intervals.length; i++) {
+        clearInterval(globals.intervals[i])
+    }
+    globals.intervals = []
+
     setTimeout ( () => {
         globals.routeTo('SignInPage')
     }, 500)
-
 
     
 }

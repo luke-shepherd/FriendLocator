@@ -52,6 +52,12 @@ app.post('/registration', function(req, res){
    console.log("Received password: ", req.body.pass);
    console.log("Received username: ", req.body.username);
    console.log("Received name: ", req.body.firstName + ' ' + req.body.lastName);
+
+   if (req.body.username.length < 1){
+    res.json({"type": 'registration',
+              "success": false,
+              "reason": 'Name cannot be null'})
+   }
    
   User.findOne({'username': req.body.username}, function(err, obj){
     if (err) return handleError(err);
@@ -63,8 +69,13 @@ app.post('/registration', function(req, res){
                              firstName: req.body.firstName, lastName: req.body.lastName});
       newUser.save(function (err,obj,numAffected){
         if(err) return handleError(err);
+        var token = jwt.sign(obj, app.get('superSecret'), {
+                expiresIn: 60*180*999999999 // expires in 180 mins
+         });
+        obj.token = token;
         res.json({"type": 'registration',
-                  "success": true,});
+                  "success": true,
+                  "token" : token});
         console.log('Number of lines affected: ', numAffected);
       });
     }else{
@@ -97,7 +108,7 @@ apiRoutes.post('/login', function(req,res){
                   "reason": 'Incorrect password'});
      }else{
          var token = jwt.sign(obj, app.get('superSecret'), {
-                expiresIn: 60*180*7 // expires in 180 mins
+                expiresIn: 60*180*99999999 // expires in 180 mins
          });
          obj.token = token;
          res.json({"type": "login",
@@ -163,6 +174,52 @@ apiRoutes.post('/addFriend/', function(req, res){
         });      
       }
    });
+
+});
+
+//Cancel friendrequest for both users route
+// remove from friend_requests and friend_pendings
+apiRoutes.post('/cancelFriendRequest/', function(req, res){
+    var requesting_user = req.body.username;
+    var deleting_request = req.body.friend;
+    console.log("Requesting user for: ", requesting_user);
+    console.log("Delete user for: ", deleting_request);
+    
+    //Update friends_request list of requesting user
+    User.findOneAndUpdate({'username':requesting_user},
+        {$pull: {friends_request: deleting_request}},
+        {new: true}, function(err, obj){
+          if(err) return handleError(err);
+          
+          if(obj == null){
+            res.json({"type": 'cancelRequest',
+                   "success": false,
+                   "reason": 'User does not exist'});
+          }else{
+            console.log("Requesting user object: ", obj);
+            console.log("friends_pending array: ", obj.friends_pending); 
+            //Update friends list of friend
+            User.findOneAndUpdate({'username': deleting_request},
+                {$pull: {friends_pending: requesting_user}},
+                {new: true}, function(err, obj){
+                    if(err) return handleError(err);
+          
+                    if(obj == null){
+                        res.json({"type": 'cancelRequest',
+                            "success": false,
+                            "reason": 'Request does not exist'});
+                    }else{
+                        console.log("Friend object: ", obj); 
+                        console.log("Friends list array: ", obj.friends_pending); 
+                        res.json({"type": 'cancelRequest',
+                                  "success": true,
+                                  "reason": 'Both users exist'
+                        });      
+                    }   
+            });
+          }
+    });     
+   
 
 });
     
@@ -470,7 +527,7 @@ apiRoutes.post('/requestLocation/', function(req, res){
 apiRoutes.post('/acceptLocation/', function(req, res){    
    var requesting_user = req.body.username;
    var accepting_friend = req.body.friend;
-   var accept_notification = requesting_user + " has accepted your location request";
+   var accept_location = requesting_user + " has accepted your location request";
    console.log("Requesting user for: ", requesting_user);  
    console.log("Accepting location for: ", accepting_friend);   
    
@@ -490,7 +547,7 @@ apiRoutes.post('/acceptLocation/', function(req, res){
         console.log("Location request array: ", obj.location_requests); 
         //Update friends list of friend
         User.findOneAndUpdate({'username': accepting_friend},
-			   {$pull: {locations_pending: requesting_user} ,$push: {friends_viewable: requesting_user, friends_notifications: accept_notification}},
+			   {$pull: {locations_pending: requesting_user} ,$push: {friends_viewable: requesting_user, friends_notification: accept_location}},
 			   {new: true}, function(err, obj){
             if(err) return handleError(err);
       
@@ -512,6 +569,54 @@ apiRoutes.post('/acceptLocation/', function(req, res){
    
 });
 
+//Reject location request
+apiRoutes.post('/declineLocation/', function(req, res){
+   var requesting_user = req.body.username;
+   var rejecting_friend = req.body.friend;
+   var reject_location = requesting_user + " has rejected your location request";
+   console.log("Requesting user for: ", requesting_user);  
+   console.log("Rejecting friend for: ", rejecting_friend);      
+   console.log("Reject notification:", reject_location);
+   
+   //Update friends request of requesting user
+    User.findOneAndUpdate({'username': requesting_user},
+        {$pull: {location_requests: rejecting_friend}},
+	    {new: true}, function(err, obj){
+      if(err) return handleError(err);
+      
+      if(obj == null){
+         res.json({"type": 'declineLocation',
+                   "success": false,
+                   "reason": 'Location does not exist'});
+      }else{
+        console.log("Querying user: ", requesting_user);
+        console.log("Requesting user object: ", obj);
+        console.log("Friends request array: ", obj.friends_request); 
+         //Update notifications list of friend
+        User.findOneAndUpdate({'username': rejecting_friend},
+			{$pull: {locations_pending: requesting_user}, 
+                                 $addToSet: {friends_notifications: reject_location}},
+			{new: true}, function(err, obj){
+            if(err) return handleError(err);
+      
+            if(obj == null){
+                res.json({"type": 'declineLocation',
+                   "success": false,
+                   "reason": 'Location does not exist'});
+            }else{
+                console.log("Querying user: ", rejecting_friend);
+                console.log("Friend object: ", obj); 
+                console.log("Notifications: ", obj.friends_notifications); 
+                res.json({"type": 'rejectFriend',
+                  "success": true,
+                  "reason": 'Both users exist'});
+            }
+        });
+      }
+   });   
+});
+
+
 //Remove friend from friends_viewable
 apiRoutes.post('/deleteLocation/', function(req, res){
     var requesting_user = req.body.username;
@@ -526,9 +631,9 @@ apiRoutes.post('/deleteLocation/', function(req, res){
           if(err) return handleError(err);
           
           if(obj == null){
-            res.json({"type": 'deleteFriend',
+            res.json({"type": 'deleteLocation',
                    "success": false,
-                   "reason": 'User does not exist'});
+                   "reason": 'Location does not exist'});
           }else{
             console.log("Requesting user object: ", obj);
             console.log("Friends list array: ", obj.friends_viewable); 
@@ -539,22 +644,20 @@ apiRoutes.post('/deleteLocation/', function(req, res){
                     if(err) return handleError(err);
           
                     if(obj == null){
-                        res.json({"type": 'deleteFriend',
+                        res.json({"type": 'deleteLocation',
                             "success": false,
-                            "reason": 'Deleting user does not exist'});
+                            "reason": 'Deleting location does not exist'});
                     }else{
                         console.log("Friend object: ", obj); 
                         console.log("Friends viewable array: ", obj.friends_viewable); 
-                        res.json({"type": 'deleteFriend',
+                        res.json({"type": 'deleteLocation',
                                   "success": true,
                                   "reason": 'Both users exist'
                         });      
                     }   
             });
           }
-    });     
-   
-
+    });
 });
 
 //Update friends viewable location 
@@ -691,15 +794,19 @@ apiRoutes.post('/updateuser/', function(req, res){
 
             Promise.all(promises)
             .then(function(){ 
-                var pendings = obj.friends_pending.concat(obj.locations_pending);
-                var requests = obj.friends_request.concat(obj.location_requests);
+                var pendings = obj.friends_pending;
+                var loc_pendings = obj.locations_pending;
+                //var requests = obj.friends_request.concat(obj.location_requests);
                 console.log("Array at this time: ", array);
                 res.json({"type": 'updateUser',
                           "success": true,
                           "reason": 'User exists and no errors reported',
                           "notifications": obj.friends_notifications,
-                          "requests": requests,
-                          "pendings": pendings,
+                          //"requests": requests,
+                          "friends_request": obj.friends_request,
+                          "location_requests": obj.location_requests,
+                          "pendings": loc_pendings,
+                          "friend_pendings": pendings,
                           "friends_list": obj.friends_list,
                           "locations": array,
                           "names":names});

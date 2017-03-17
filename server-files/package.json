@@ -5,9 +5,11 @@
   "main": "index.js",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.5.0",
     "body-parser": "^1.16.0",
     "bufferutil": "^2.0.1",
     "express": "^4.14.0",
+    "gridfs-stream": "^1.1.0",
     "jsonwebtoken": "^7.2.1",
     "mongoose": "^4.8.1",
     "mongoose-geojson-schema": "^2.1.2",
@@ -16,8 +18,7 @@
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "pg": "^6.1.2",
-    "ws": "^2.0.3",
-    "gridfs-stream": "^1.1.0"
+    "ws": "^2.0.3"
   },
   "devDependencies": {
     "should": "~7.1.0",
@@ -38,4 +39,3 @@
   },
   "homepage": "https://github.com/luke-shepherd/AdultFriendLocator#readme"
 }
-

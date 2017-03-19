@@ -244,9 +244,6 @@ export default class UserPage extends Component {
                            source={require('./assets/stock_prof_pic.jpg')}/>
                     {this.renderSendReq()}  
                     {this.renderDeleteFriend()}
-                    <Text style = {this.style.friendstext}>
-                        {globals.friendslist.length == 0 ? 'No Friends :(' : 'Friends:'}
-                    </Text>
                     <View style={this.style.listcontainer}>
                         <ListView
                             dataSource={this.ds.cloneWithRows(this.state.data)}

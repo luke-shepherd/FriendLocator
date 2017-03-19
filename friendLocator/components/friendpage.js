@@ -147,6 +147,8 @@ export default class UserPage extends Component {
             var url = globals.base_url + 'api/deleteLocation'
             var success = globals.sendPacket(obj, url, () => {console.log('location request deleted')})
 
+            globals.routeTo('FriendPage')
+
             console.log('End Session Button');
     }
 

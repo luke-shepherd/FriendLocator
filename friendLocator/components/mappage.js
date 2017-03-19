@@ -27,6 +27,7 @@ export default class MapPage extends Component {
             friends: globals.friendlocs,
 
             user: 'nouser',
+            pressed: {},
         }
         this.style = StyleSheet.create({
             container: {
@@ -105,6 +106,8 @@ export default class MapPage extends Component {
 
         }
 
+
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 globals.userLocation.longitude = position.coords.longitude
@@ -133,6 +136,18 @@ export default class MapPage extends Component {
         this.setState({ region });
     }
 
+    handleMarkerPress(event) {
+        const name = event.id
+
+        console.log('MARKER PRESS')
+        console.log(name)
+
+        globals.userpage = name
+        setTimeout ( () => {
+            globals.routeTo('FriendPage')
+        }, 500)
+    }
+
     render() {
         return (
              <View style={this.style.container}>
@@ -145,6 +160,9 @@ export default class MapPage extends Component {
                               key={marker.token}
                               coordinate={marker.latlng}
                               title={marker.username}
+                              identifier={marker.username} 
+                              onCalloutPress={(event) => {event.id = marker.username; 
+                                                          this.handleMarkerPress(event)}}
                         />
                     ))}
                 </MapView>

@@ -69,10 +69,18 @@ export default class SearchBar extends Component {
     buttonAction(user) {
         //this.routeTo('Userpage')
         console.log('[*] pressed: ' + user)
-        globals.userpage = user
-        setTimeout ( () => {
-            globals.routeTo('FriendPage')
-        }, 500)
+        
+        if(user == globals.user) {
+            setTimeout ( () => {
+                globals.routeTo('UserPage')
+            }, 500)
+        }
+        else {
+            globals.userpage = user
+            setTimeout ( () => {
+                globals.routeTo('FriendPage')
+            }, 500)
+        }   
     }
 
     render() {

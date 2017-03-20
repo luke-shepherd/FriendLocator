@@ -22,7 +22,9 @@ const logOut = () => {
     //app user info
     globals.pass = '';
     globals.friendslist = [];
-    globals.friendlocs = [],
+    globals.friendlocs = [];
+    maps.state.friends = [];
+    
     globals.dump()
 
     setTimeout ( () => {

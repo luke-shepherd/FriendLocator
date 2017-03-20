@@ -97,6 +97,22 @@ export default class MapPage extends Component {
                                                        longitude: globals.userLocation.longitude,
                                                        latitude: globals.userLocation.latitude});
 
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            globals.userLocation.longitude = position.coords.longitude
+                            globals.userLocation.latitude = position.coords.latitude
+                            if (globals.nav.getCurrentRoutes()[0].id == 'MapPage') {
+
+                                globals.userLocation.latitude = position.coords.latitude;
+                                globals.userLocation.longitude = position.coords.longitude;
+
+                            }
+
+                            console.log(this.state.loc)
+                        }, (error) => console.log(JSON.stringify(error)),
+                        {enableHighAccuracy: true, timeout: 20000}
+                    )
+
                     var endpoint = globals.base_url + 'api/updateloc'
                     var success = globals.sendPacket(obj, endpoint, () => {console.log('successfully updated location to db')})
                 }

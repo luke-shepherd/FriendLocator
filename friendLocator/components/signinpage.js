@@ -116,6 +116,7 @@ export default class SignInPage extends Component {
                     <TextInput
                         style={this.style.inputbox}
                         placeholder='Enter Password'
+                        secureTextEntry={true}
                         onChangeText={(password) => this.setState({password})}
                     />
 

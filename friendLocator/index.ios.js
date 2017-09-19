@@ -1,53 +1,43 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
 import React, { Component } from 'react';
+
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
+    AppRegistry,
+    Navigator,
+    StyleSheet,
+    Text,
+    View
 } from 'react-native';
 
-export default class friendLocator extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
+import TestPage from './components/testpage.js';
+import SignInPage from './components/signinpage.js';
+import MapPage from './components/mappage.js';
+import UserPage from './components/userpage.js';
+
+import NotifPage from './components/notifpage.js';
+globals = require('./components/globals')
+
+export default class Main extends Component {
+    renderScene(route, navigator) {
+        globals.nav = navigator
+        switch(route.id) {
+            case 'SignInPage':  return (<SignInPage nav={navigator}/>);
+            case 'TestPage':    return (<TestPage nav={navigator}/>);
+            case 'MapPage':    return (<MapPage nav={navigator}/>);
+            case 'UserPage':   return (<UserPage nav={navigator}/>);
+            case 'NotifPage':    return (<NotifPage nav={navigator}/>);
+        }
+    }
+
+    render() {
+        return (
+            <Navigator
+                initialRoute={{id: 'MapPage'}}
+                renderScene={this.renderScene.bind(this)}
+            />
+        );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+AppRegistry.registerComponent('friendLocator', () => Main);
 
-AppRegistry.registerComponent('friendLocator', () => friendLocator);

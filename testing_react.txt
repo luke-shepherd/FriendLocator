@@ -2,12 +2,13 @@ how to test react and android installation
 -------------------------------------------------------------
 ANDROID:
     react-native init projectname
-    (start emulator)
+    (start emulator) android avd &
     cd projectname
     react-native start > /dev/null 2>&1 &
     adb reverse tcp:8081 tcp:8081
     (wait a second, depends on how fast your computer is)
     react-native run-android
+    react-native log-android
 
 NOTE: requires emulator running or android device connected
       to start emulator from command line:
@@ -32,6 +33,8 @@ NOTE: requires emulator running or android device connected
 IOS:
 open projectname in xcode
 click run
+react-native log-ios
 
-NOTE: untested, ios emulation requires xcode installation
+NOTE: untested
+      ios emulation requires xcode installation
 

@@ -16,7 +16,10 @@ Friend locator was written by Luke Shepherd, Kyle Danna, Alice Yu, Sean Elliott 
 Source files for the front end can be found in the client-src directory, while source files for the back end
 can be found in the server-files directory. 
 
+Source code files added to boilerplate ReactNative frontend are located in client-src/components/ as well as
+changes made to client-src/index.android.js, client-src/android/app/build.gradle, and client-src/android/app/src/main/AndroidManifest.xml
+
 Specifications for the server API can be found in the file Packet_Header_Notes.txt
 Notes on how to run the project can be found in the file testing_react.txt
 
-Testing was done on a Google Nexus 5 emulator running Android L (API 23) and an HTC One handset running Android L (API 23)
+Testing was done on a Google Nexus 5 emulator running Android 6.0 (API 23) and an HTC One handset running Android 5.1 (API 22)
